@@ -4,8 +4,8 @@ Character.prototype.CULTURES = [ 'american' ];
 
 Character.prototype.NAMES = {
 	american: {
-		first: [ 'Abby', 'Ben', 'Claire', 'Darren', 'Erica', 'Finn', 'Frank', 'Jessica', 'Jake', 'Laura', 'Lyle', 'Katie', 'Sandy', 'Stephen', 'Tess', 'Zach' ],
-		last: [ 'Carpenter', 'Dewhurst', 'Farrow', 'Hendel', 'Stanonik', 'Swanson' ],
+		first: [ 'Abby', 'Aileen', 'Ben', 'Claire', 'Darren', 'Erica', 'Finn', 'Frank', 'Jessica', 'Jake', 'Laura', 'Liz', 'Lyle', 'Katie', 'Sandy', 'Stephen', 'Tess', 'Zach' ],
+		last: [ 'Arze', 'Baker', 'Carpenter', 'Dewhurst', 'Farrow', 'Hendel', 'Lantz', 'MacKay', 'Rogers', 'Smith', 'Stanonik', 'Swanson' ],
 	},
 };
 
@@ -98,7 +98,6 @@ function Character($element, options)
 	// if Character is called with options containing a stats property, those stats are merged into the default stats
 	this.stats = $.extend({}, this.stats, options.stats || {});
 	
-	
 	/*
 		how to work with objects and arrays and things in JS - A TUTORIAL, I GUESS
 		
@@ -183,27 +182,29 @@ function Character($element, options)
 		
 	/** @TODO: generate the character */
 
-	// some sample code, that does things 100% randomly
-	var culture = this.CULTURES.sample();
-	
-	_this.stats.basics.name = this.NAMES[culture].first.sample() + ' ' + this.NAMES[culture].last.sample();
-	_this.stats.basics.tradition = this.TRADITIONS.sample();
-	
-	// 1-5 for each attribute
-	$.each(attributes, function(i, attribute) {
-		_this.stats.attributes[attribute].value = Math.floor(Math.random() * 5) + 1;
-	});
-	
-	
-	
-	
+	var generateCharacter = function()
+	{
+		// some sample code, that does things 100% randomly
+		var culture = _this.CULTURES.sample();
+		
+		_this.stats.basics.name = _this.NAMES[culture].first.sample() + ' ' + _this.NAMES[culture].last.sample();
+		_this.stats.basics.tradition = _this.TRADITIONS.sample();
+		
+		// 1-5 for each attribute
+		$.each(attributes, function(i, attribute) {
+			_this.stats.attributes[attribute].value = Math.floor(Math.random() * 5) + 1;
+		});
+		
+		// just as an example, everyone gets pilot 5. no real reason. just an example.
+		_this.changeAbility('pilot', 5);
+	};
 	
 	/*
 	 * adds "amount" to the specified "ability", creating it if it does not already exist
 	 */
 	this.changeAbility = function(ability, amount)
 	{
-		if(_this.stats.abilities.hasOwnProperty(background))
+		if(_this.stats.abilities.hasOwnProperty(ability))
 			_this.stats.abilities[ability].value += amount;
 		else
 			_this.stats.abilities[ability] = { value: amount, speciality: "" };
@@ -242,7 +243,6 @@ function Character($element, options)
 	this.render = function()
 	{
 		$.each(_this.stats.basics, function(stat, value) {
-			console.log(stat + ' = ' + value);
 			if(stat == 'arete' || stat == 'willpower' || stat == 'health')
 				$element.find('[data-property="' + stat + '"]').html(_this.renderDots(value, 10));
 			else
@@ -250,8 +250,36 @@ function Character($element, options)
 		});
 
 		_this.renderScoresWithDots(_this.stats.attributes, 'specialty');
-		_this.renderScoresWithDots(_this.stats.abilities, 'specialty');
+		_this.renderAbilities();
 		_this.renderScoresWithDots(_this.stats.spheres, 'focus');
+	};
+	
+	this.renderAbilities = function()
+	{
+		var abilityKeys = Object.keys(_this.stats.abilities);
+		var abilitiesPerColumn = Math.ceil(abilityKeys.length / 3);
+	
+		var $abilitiesSection = $('[data-property="abilities"]');
+		
+		var columns = [
+			"", "", ""
+		];
+	
+		$.each(abilityKeys, function(i, stat) {
+			var details = _this.stats.abilities[stat];
+			var text = _this.renderDots(details.value, 5);
+		
+			if(stat.hasOwnProperty('specialty') && details.specialty != '')
+				text += ' (' + details.specialty + ')';
+			
+			columns[Math.floor(i / abilitiesPerColumn)] += '<dt>' + stat.titleize() + '</dt><dd>' + text + '</dd>';
+		});
+		
+		$abilitiesSection.html(
+			'<div class="col span_1_of_3"><dl>' + columns[0] + '</dl></div>' +
+			'<div class="col span_1_of_3"><dl>' + columns[1] + '</dl></div>' +
+			'<div class="col span_1_of_3"><dl>' + columns[2] + '</dl></div>'
+		);
 	};
 	
 	this.renderScoresWithDots = function(scores, detailProperty)
@@ -274,4 +302,6 @@ function Character($element, options)
 	{
 		return '<span title="' + value + '">' + "\u25cf".repeat(value) + "\u25cb".repeat(max - value) + '</span>';
 	};
+	
+	generateCharacter();
 }
