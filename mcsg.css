@@ -86,6 +86,7 @@ dl > dt {
 
 dl > dd {
 	float: right;
+	font-weight: bold;
 }
 
 #character-sheet h2 {

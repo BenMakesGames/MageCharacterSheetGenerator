@@ -1,4 +1,28 @@
-Character.prototype.DefaultOptions = {
+// consider these "constants" (even though JS has no such thing >_>)
+
+Character.prototype.CULTURES = [ 'american' ];
+
+Character.prototype.NAMES = {
+	american: {
+		first: [ 'Abby', 'Ben', 'Claire', 'Darren', 'Erica', 'Finn', 'Frank', 'Jessica', 'Jake', 'Laura', 'Lyle', 'Katie', 'Sandy', 'Stephen', 'Tess', 'Zach' ],
+		last: [ 'Carpenter', 'Dewhurst', 'Farrow', 'Hendel', 'Stanonik', 'Swanson' ],
+	},
+};
+
+Character.prototype.TRADITIONS = [
+	'Akashic Brotherhood',
+	'Celestial Chorus',
+	'Cult of Ecstasy',
+	'Dreamspeakers',
+	'Euthanatos',
+	'Order of Hermes',
+	'Son of Ether',
+	'Verbena',
+	'Virtual Adepts',
+];
+
+
+Character.prototype.DEFAULT_OPTIONS = {
 	'class': 'mage',
 };
 
@@ -13,10 +37,10 @@ function Character($element, options)
 
 	
 	
-	// this gobbledygook merges the passed "options" object with the Character.DefaultOptions object, storing the result back into "options". the
+	// this gobbledygook merges the passed "options" object with the this.DEFAULT_OPTIONS object, storing the result back into "options". the
 	// properties and values of "options" will take precedence. also, if "options" is not defined (because Character() was called without any
 	// arguments), an empty object is used (that's the "options || {}" bit, which is more JS weirdness; sorry).
-	options = $.extend({}, Character.DefaultOptions, options || {});
+	options = $.extend({}, this.DEFAULT_OPTIONS, options || {});
 	
 	var _this = this; // it's useful when within methods, because JS is weird
 
@@ -159,9 +183,15 @@ function Character($element, options)
 		
 	/** @TODO: generate the character */
 
-	// just to demonstrate that the reroll button works. randomly assigns a value from 2 to 5 to each attribute
+	// some sample code, that does things 100% randomly
+	var culture = this.CULTURES.sample();
+	
+	_this.stats.basics.name = this.NAMES[culture].first.sample() + ' ' + this.NAMES[culture].last.sample();
+	_this.stats.basics.tradition = this.TRADITIONS.sample();
+	
+	// 1-5 for each attribute
 	$.each(attributes, function(i, attribute) {
-		_this.stats.attributes[attribute].value = Math.floor(Math.random() * 4) + 2;
+		_this.stats.attributes[attribute].value = Math.floor(Math.random() * 5) + 1;
 	});
 	
 	
@@ -212,6 +242,7 @@ function Character($element, options)
 	this.render = function()
 	{
 		$.each(_this.stats.basics, function(stat, value) {
+			console.log(stat + ' = ' + value);
 			if(stat == 'arete' || stat == 'willpower' || stat == 'health')
 				$element.find('[data-property="' + stat + '"]').html(_this.renderDots(value, 10));
 			else
