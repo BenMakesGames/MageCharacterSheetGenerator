@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Mage Character Sheet Generator</title>
+		<meta name="description" content="Generates Mage characters for the old World of Darkness system." />
+		<meta name="author" content="Stephen Dewhurst & Ben Hendel-Doying" />
+		
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/sugar/1.4.1/sugar-full.min.js"></script>
+		<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+		<script src="mcsg.js"></script>
+		<link rel="stylesheet" href="mcsg.css" />
+		<script>
+			$(function() {
+				var options = {};
+			
+				var character = new Character($('#character-sheet'), options);
+				
+				character.render();
+			});
+		</script>
+	</head>
+	<body>
+		<div id="character-sheet">
+			<h2>Character</h2>
+			<div class="section group">
+				<div class="col span_1_of_3">
+					<dl>
+						<dt>Name</dt>
+						<dd data-property="name"></dd>
+						<dt>Tradition</dt>
+						<dd data-property="tradition"></dd>
+					</dl>
+				</div>
+				<div class="col span_1_of_3">
+					<dl>
+						<dt>Nature</dt>
+						<dd data-property="nature"></dd>
+						<dt>Demeanor</dt>
+						<dd data-property="demeanor"></dd>
+					</dl>
+				</div>
+				<div class="col span_1_of_3">
+					<dl>
+						<dt>Essence</dt>
+						<dd data-property="essence"></dd>
+						<dt>Experience</dt>
+						<dd></dd>
+					</dl>
+				</div>
+			</div>
+			<h2>Attributes</h2>
+			<div class="section group">
+				<div class="col span_1_of_3">
+					<dl>
+						<dt>Strength</dt>
+						<dd data-property="strength"></dd>
+						<dt>Dexterity</dt>
+						<dd data-property="dexterity"></dd>
+						<dt>Stamina</dt>
+						<dd data-property="stamina"></dd>
+					</dl>
+				</div>
+				<div class="col span_1_of_3">
+					<dl>
+						<dt>Charisma</dt>
+						<dd data-property="strength"></dd>
+						<dt>Manipulation</dt>
+						<dd data-property="dexterity"></dd>
+						<dt>Appearance</dt>
+						<dd data-property="stamina"></dd>
+					</dl>
+				</div>
+				<div class="col span_1_of_3">
+					<dl>
+						<dt>Perception</dt>
+						<dd data-property="perception"></dd>
+						<dt>Intelligence</dt>
+						<dd data-property="intelligence"></dd>
+						<dt>Wits</dt>
+						<dd data-property="wits"></dd>
+					</dl>
+				</div>
+			</div>
+	</body>
+</html>
