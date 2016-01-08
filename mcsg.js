@@ -98,92 +98,90 @@ function Character($element, options)
 	// if Character is called with options containing a stats property, those stats are merged into the default stats
 	this.stats = $.extend({}, this.stats, options.stats || {});
 	
-	/*
-		how to work with objects and arrays and things in JS - A TUTORIAL, I GUESS
-		
-		// messing with attributes and abilities:
-		this.stats.attributes.strength.value += 2;
-		
-		// here's a clever way to just make up an array on the fly, and pick a single random element from it:
-		if(this.stats.strength.value >= 4)
-			this.stats.strength.speciality = ["jumping", "looking super-ripped", "fists like anvils"].sample();
-			
-		// if you've got the property name in a variable, you'll need to access it in a different way:
-		var attribute = ['strength', 'stamina', 'dexterity'].sample(); // pick a random property name. (sample is real useful. remember it.)
-		this.stats[property].value++;
-
-		// .add() adds an item to an array; .remove() removes it
-		this.stats.merits.add("Cat-like Reflexes");
-		
-		// .any() checks to see if an item is in an array.
-		if(this.stats.merits.any("Cat-like Reflexes"))
-		{
-			// Cat-like Reflexes is an item in the array!
-		}
-	
-		// seems like this should work, BUT: if "library" does not already exist as a property, JS will whine (oh, loosely-typed languages...)
-		this.stats.backgrounds.library.value++;
-		
-		// this always works, though. assignment creates the property if it doesn't already exist:
-		this.stats.backgrounds.library = { value: 1 };
-	
-		// .hasOwnProperty() checks to see if a property exists on an object (OH, LOOSELY-TYPED LANGUAGES...)
-		if(this.stats.backgrounds.hasOwnProperty('library'))
-		{
-			// the character has a library of some value!
-		}
-		
-		// so, if we wanted to add 1 point to "library", without knowing whether or not the character already has it...
-		if(this.stats.backgrounds.hasOwnProperty('library'))
-			this.stats.backgrounds.library.value++;
-		else
-			this.stats.backgrounds.library = { value: 1 };
-		
-		// that seems troublesome, though, so I've added a method to help us out:
-		this.changeBackground('library', 1); // adds 1
-		this.changeBackground('library', -2); // subtracts 2
-		
-		// I added a similar method for abilities:
-		this.changeAbility('melee', 1);
-		
-		// note: you also can't do a comparison on a non-existent property, so you have to check for existence first:
-		if(this.stats.backgrounds.hasOwnProperty('library') && this.stats.backgrounds.library.value > 2)
-		{
-			// the character has at LEAST a 3-point library
-		}
-		
-		// again, that seems troublesome, so I've made us a method:
-		if(this.backgroundValue('library') > 2)
-		{
-			// easier!
-		}
-		
-		// to remove a property from an object entirely (setting it to 0 is technically fine, but it'll make checking for a background's existence harder)
-		delete this.stats.backgrounds.library;
-		
-		// note: backgrounds are stored as property=>value pairs on an object, and property names have the same restrictions as variable names...
-		// like no spaces! use underscores instead. our code is smart and replaces underscores with spaces when rendering the character.
-		this.stats.backgrounds.background_with_space_in_it = { value: 2, detail: "only useful when eating spaghetti" };
-		
-		// finally, remember the "options" that are passed in?!
-		if(options.class == 'mage')
-		{
-			// set stuff up appropriate for generating a mage
-			this.stats.willpower = 5;
-			this.stats.arete = 1;
-			
-			// (I actually set up stats assuming we're generating a mage, so this example code is totally unnecessary, but you get the idea...)
-		}
-		
-		// and of course, feel free to add more methods, below!
-	*/
-		
-
-		
-	/** @TODO: generate the character */
-
 	var generateCharacter = function()
 	{
+		/** @TODO: ACTUALLY generate the character */
+
+		/*
+			how to work with objects and arrays and things in JS - A TUTORIAL, I GUESS
+			
+			// messing with attributes and abilities:
+			this.stats.attributes.strength.value += 2;
+			
+			// here's a clever way to just make up an array on the fly, and pick a single random element from it:
+			if(this.stats.strength.value >= 4)
+				this.stats.strength.speciality = ["jumping", "looking super-ripped", "fists like anvils"].sample();
+				
+			// if you've got the property name in a variable, you'll need to access it in a different way:
+			var attribute = ['strength', 'stamina', 'dexterity'].sample(); // pick a random property name. (sample is real useful. remember it.)
+			this.stats[property].value++;
+
+			// .add() adds an item to an array; .remove() removes it
+			this.stats.merits.add("Cat-like Reflexes");
+			
+			// .any() checks to see if an item is in an array.
+			if(this.stats.merits.any("Cat-like Reflexes"))
+			{
+				// Cat-like Reflexes is an item in the array!
+			}
+		
+			// seems like this should work, BUT: if "library" does not already exist as a property, JS will whine (oh, loosely-typed languages...)
+			this.stats.backgrounds.library.value++;
+			
+			// this always works, though. assignment creates the property if it doesn't already exist:
+			this.stats.backgrounds.library = { value: 1 };
+		
+			// .hasOwnProperty() checks to see if a property exists on an object (OH, LOOSELY-TYPED LANGUAGES...)
+			if(this.stats.backgrounds.hasOwnProperty('library'))
+			{
+				// the character has a library of some value!
+			}
+			
+			// so, if we wanted to add 1 point to "library", without knowing whether or not the character already has it...
+			if(this.stats.backgrounds.hasOwnProperty('library'))
+				this.stats.backgrounds.library.value++;
+			else
+				this.stats.backgrounds.library = { value: 1 };
+			
+			// that seems troublesome, though, so I've added a method to help us out:
+			this.changeBackground('library', 1); // adds 1
+			this.changeBackground('library', -2); // subtracts 2
+			
+			// I added a similar method for abilities:
+			this.changeAbility('melee', 1);
+			
+			// note: you also can't do a comparison on a non-existent property, so you have to check for existence first:
+			if(this.stats.backgrounds.hasOwnProperty('library') && this.stats.backgrounds.library.value > 2)
+			{
+				// the character has at LEAST a 3-point library
+			}
+			
+			// again, that seems troublesome, so I've made us a method:
+			if(this.backgroundValue('library') > 2)
+			{
+				// easier!
+			}
+			
+			// to remove a property from an object entirely (setting it to 0 is technically fine, but it'll make checking for a background's existence harder)
+			delete this.stats.backgrounds.library;
+			
+			// note: backgrounds are stored as property=>value pairs on an object, and property names have the same restrictions as variable names...
+			// like no spaces! use underscores instead. our code is smart and replaces underscores with spaces when rendering the character.
+			this.stats.backgrounds.background_with_space_in_it = { value: 2, detail: "only useful when eating spaghetti" };
+			
+			// finally, remember the "options" that are passed in?!
+			if(options.class == 'mage')
+			{
+				// set stuff up appropriate for generating a mage
+				this.stats.willpower = 5;
+				this.stats.arete = 1;
+				
+				// (I actually set up stats assuming we're generating a mage, so this example code is totally unnecessary, but you get the idea...)
+			}
+			
+			// and of course, feel free to add more methods, below!
+		*/
+		
 		// some sample code, that does things 100% randomly
 		var culture = _this.CULTURES.sample();
 		
@@ -197,7 +195,8 @@ function Character($element, options)
 		
 		// just as an example, everyone gets pilot 5. no real reason. just an example.
 		_this.changeAbility('pilot', 5);
-	};
+	
+	}; // end of generateCharacter method
 	
 	/*
 	 * adds "amount" to the specified "ability", creating it if it does not already exist
@@ -280,7 +279,7 @@ function Character($element, options)
 			'<div class="col span_1_of_3"><dl>' + columns[1] + '</dl></div>' +
 			'<div class="col span_1_of_3"><dl>' + columns[2] + '</dl></div>'
 		);
-	};
+	}; // renderAbilities
 	
 	this.renderScoresWithDots = function(scores, detailProperty)
 	{
@@ -304,4 +303,5 @@ function Character($element, options)
 	};
 	
 	generateCharacter();
-}
+
+} // Character
