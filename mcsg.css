@@ -17,6 +17,13 @@ body > header {
 	line-height: 2.8rem;
 }
 
+@media screen and (max-width:480px) {
+	body > header {
+		font-size: 1.5rem;
+		line-height: 2.1rem;
+	}
+}
+
 body > * > section {
 	max-width: 960px;
 	margin: 0 auto;
