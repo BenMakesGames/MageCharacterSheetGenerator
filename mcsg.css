@@ -48,3 +48,14 @@ dl > dt {
 dl > dd {
 	float: right;
 }
+
+#character-sheet h2 {
+	text-align: center;
+	background-color: #bdf;
+		font-size: 1.25rem;
+		line-height: 1.5rem;
+}
+
+#character-sheet h3 {
+	text-align: center;
+}

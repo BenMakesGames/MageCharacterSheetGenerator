@@ -203,7 +203,10 @@ function Character($element, options)
 	this.render = function()
 	{
 		$.each(_this.stats.basics, function(stat, value) {
-			$element.find('[data-property="' + stat + '"]').text(value);
+			if(stat == 'arete' || stat == 'willpower' || stat == 'health')
+				$element.find('[data-property="' + stat + '"]').text(_this.renderDots(value, 10));
+			else
+				$element.find('[data-property="' + stat + '"]').text(value);
 		});
 
 		_this.renderScoresWithDots(_this.stats.attributes, 'specialty');
@@ -213,21 +216,22 @@ function Character($element, options)
 	
 	this.renderScoresWithDots = function(scores, detailProperty)
 	{
-		$.each(scores, function(stat, details) {
-			var text = _this.renderDots(stat.value);
+		$.each(Object.keys(scores), function(i, stat) {
+			var details = scores[stat];
+			var text = _this.renderDots(details.value, 5);
 		
 			if(stat.hasOwnProperty(detailProperty) && details[detailProperty] != '')
 				text += ' (' + details[detailProperty] + ')';
 			
-			$element.find('[data-property="' + stat + '"]').text(_this.renderDots(details.value));
+			$element.find('[data-property="' + stat + '"]').text(text);
 		});
 	};
 	
 	/**
-	 * @return a string containing "value" solid dots, and "5 - value" empty dots (using unicode characters 25CF and 25CB respectively)
+	 * @return a string containing "value" solid dots, and "max - value" empty dots (using unicode characters 25CF and 25CB respectively)
 	 */
-	this.renderDots = function(value)
+	this.renderDots = function(value, max)
 	{
-		return "\u25cf".repeat(value) + "\u25cb".repeat(5 - value);
+		return "\u25cf".repeat(value) + "\u25cb".repeat(max - value);
 	};
 }
