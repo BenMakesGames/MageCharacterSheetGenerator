@@ -15,18 +15,63 @@
 		<script>
 			$(function() {
 				var options = {};
+				
+				var characterHistory = [];
+				var newButtonRotate = -30;
 			
 				function generateNewCharacter()
 				{
 					var character = new Character($('#character-sheet'), options);
 				
 					character.render();
+					
+					characterHistory.add({ 'options': options, 'character': character });
+					
+					// keep character history limited to 10
+					while(characterHistory.length > 10)
+						characterHistory.removeAt(0);
+					
+					updateUndoButton();
+					updateNewButton(30);
+				}
+				
+				function updateUndoButton()
+				{
+					if(characterHistory.length > 1)
+						$('#undo').removeClass('disabled');
+					else
+						$('#undo').addClass('disabled');
+				}
+				
+				function updateNewButton(delta)
+				{
+					newButtonRotate += delta;
+					while(newButtonRotate < 0) newButtonRotate += 360;
+					while(newButtonRotate >= 360) newButtonRotate -= 360;
+					
+					$('#generate-new > i').css({ transform: 'rotate(' + newButtonRotate + 'deg)' });
 				}
 				
 				$('#generate-new').click(function(e) {
 					e.preventDefault();
 					
 					generateNewCharacter();
+				});
+				
+				$('#undo').click(function(e) {
+					e.preventDefault();
+					
+					if(characterHistory.length > 1)
+					{
+						var item = characterHistory[characterHistory.length - 2];
+						
+						item.character.render();
+						
+						characterHistory.removeAt(characterHistory.length - 1);
+					
+						updateUndoButton();
+						updateNewButton(-30);
+					}
 				});
 				
 				generateNewCharacter();
@@ -42,7 +87,8 @@
 		<menu>
 			<section>
 				<ul>
-					<li><a href="" id="generate-new">&#x21bb; Reroll</a></li>
+					<li><a href="" id="generate-new"><i>&#8635;</i> New</a></li>
+					<li><a href="" id="undo"><i>&#x238c;</i> Unroll</a></li>
 				</ul>
 			</section>
 		</menu>

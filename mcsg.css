@@ -7,7 +7,7 @@ body {
 	background-color: #ddd;
 	padding: 0;
 	margin: 0;
-	line-height: 1.4em;
+	line-height: 1.4;
 }
 
 ul,ol {
@@ -18,13 +18,14 @@ body > header {
 	background-color: #369;
 	color: #fff;
 	font-size: 2rem;
-	line-height: 2.8rem;
+	line-height: 2.8;
+	font-weight: bold;
 }
 
 @media screen and (max-width:480px) {
 	body > header {
 		font-size: 1.5rem;
-		line-height: 2.1rem;
+		line-height: 2.1;
 	}
 }
 
@@ -46,8 +47,6 @@ body > menu ul {
 body > menu ul > li {
 	display: block;
 	float: left;
-	padding: 0.25rem 0.5rem;
-	background-color: #ddd;
 	margin-left: 0.5rem;
 }
 
@@ -56,8 +55,21 @@ body > menu ul > li:first-child {
 }
 
 body > menu ul > li > a {
+	display: block;
 	color: #000;
 	text-decoration: none;
+	padding: 0.25rem 0.5rem;
+	line-height: 1.4;
+	background-color: #ddd;
+}
+
+body > menu ul > li > a.disabled {
+	color: #999;
+}
+
+body > menu ul > li > a > i {
+	font-style: normal;
+	display: inline-block;
 }
 
 body > main {
@@ -82,8 +94,8 @@ dl > dd {
 #character-sheet h2 {
 	text-align: center;
 	background-color: #bdf;
-		font-size: 1.25rem;
-		line-height: 1.5rem;
+	font-size: 1.25rem;
+	line-height: 1.5;
 }
 
 #character-sheet h3 {
