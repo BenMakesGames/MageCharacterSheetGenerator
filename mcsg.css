@@ -1,31 +1,43 @@
-/*  SECTIONS  */
-.section {
-	clear: both;
-	padding: 0px;
-	margin: 0px;
+html {
+	font-size: 100%;
+	font-family: Helvetica, Arial, sans-serif;
 }
 
-/*  COLUMN SETUP  */
-.col {
-	display: block;
-	float:left;
-	margin: 1% 0 1% 1.6%;
+body {
+	background-color: #ddd;
+	padding: 0;
+	margin: 0;
+	line-height: 1.4em;
 }
-.col:first-child { margin-left: 0; }
 
-/*  GROUPING  */
-.group:before,
-.group:after { content:""; display:table; }
-.group:after { clear:both;}
-.group { zoom:1; /* For IE 6/7 */ }
+body > header {
+	background-color: #369;
+	color: #fff;
+	font-size: 2rem;
+	line-height: 2.8rem;
+}
 
-/*  GRID OF THREE  */
-.span_3_of_3 { width: 100%; }
-.span_2_of_3 { width: 66.13%; }
-.span_1_of_3 { width: 32.26%; }
+body > * > section {
+	max-width: 960px;
+	margin: 0 auto;
+	padding: 0 1rem;
+}
 
-/*  GO FULL WIDTH BELOW 480 PIXELS */
-@media only screen and (max-width: 480px) {
-	.col {  margin: 1% 0 1% 0%; }
-	.span_3_of_3, .span_2_of_3, .span_1_of_3 { width: 100%; }
+body > main {
+	background-color: #fff;
+	padding: 1rem 0;
+}
+
+body > footer {
+	padding: 1rem 0;
+	text-align: center;
+}
+
+dl > dt {
+	float: left;
+	clear: left;
+}
+
+dl > dd {
+	float: right;
 }
