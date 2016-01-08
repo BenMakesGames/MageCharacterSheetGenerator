@@ -16,9 +16,20 @@
 			$(function() {
 				var options = {};
 			
-				var character = new Character($('#character-sheet'), options);
+				function generateNewCharacter()
+				{
+					var character = new Character($('#character-sheet'), options);
 				
-				character.render();
+					character.render();
+				}
+				
+				$('#generate-new').click(function(e) {
+					e.preventDefault();
+					
+					generateNewCharacter();
+				});
+				
+				generateNewCharacter();
 			});
 		</script>
 	</head>
@@ -28,9 +39,14 @@
 				Mage Character Sheet Generator
 			</section>
 		</header>
-		<main>
+		<menu>
 			<section>
+				<ul>
+					<li><a href="" id="generate-new">&#x21bb; Reroll</a></li>
+				</ul>
 			</section>
+		</menu>
+		<main>
 			<section id="character-sheet">
 				<h2>Character</h2>
 				<div class="section group">
@@ -77,11 +93,11 @@
 						<h3>Social</h3>
 						<dl>
 							<dt>Charisma</dt>
-							<dd data-property="strength"></dd>
+							<dd data-property="charisma"></dd>
 							<dt>Manipulation</dt>
-							<dd data-property="dexterity"></dd>
+							<dd data-property="manipulation"></dd>
 							<dt>Appearance</dt>
-							<dd data-property="stamina"></dd>
+							<dd data-property="appearance"></dd>
 						</dl>
 					</div>
 					<div class="col span_1_of_3">

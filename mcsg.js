@@ -75,10 +75,6 @@ function Character($element, options)
 	this.stats = $.extend({}, this.stats, options.stats || {});
 	
 	
-	
-	
-	/** @TODO: generate the character */
-	
 	/*
 		how to work with objects and arrays and things in JS - A TUTORIAL, I GUESS
 		
@@ -158,6 +154,19 @@ function Character($element, options)
 		
 		// and of course, feel free to add more methods, below!
 	*/
+		
+
+		
+	/** @TODO: generate the character */
+
+	// just to demonstrate that the reroll button works. randomly assigns a value from 2 to 5 to each attribute
+	$.each(attributes, function(i, attribute) {
+		_this.stats.attributes[attribute].value = Math.floor(Math.random() * 4) + 2;
+	});
+	
+	
+	
+	
 	
 	/*
 	 * adds "amount" to the specified "ability", creating it if it does not already exist
@@ -204,9 +213,9 @@ function Character($element, options)
 	{
 		$.each(_this.stats.basics, function(stat, value) {
 			if(stat == 'arete' || stat == 'willpower' || stat == 'health')
-				$element.find('[data-property="' + stat + '"]').text(_this.renderDots(value, 10));
+				$element.find('[data-property="' + stat + '"]').html(_this.renderDots(value, 10));
 			else
-				$element.find('[data-property="' + stat + '"]').text(value);
+				$element.find('[data-property="' + stat + '"]').html(value);
 		});
 
 		_this.renderScoresWithDots(_this.stats.attributes, 'specialty');
@@ -223,7 +232,7 @@ function Character($element, options)
 			if(stat.hasOwnProperty(detailProperty) && details[detailProperty] != '')
 				text += ' (' + details[detailProperty] + ')';
 			
-			$element.find('[data-property="' + stat + '"]').text(text);
+			$element.find('[data-property="' + stat + '"]').html(text);
 		});
 	};
 	
@@ -232,6 +241,6 @@ function Character($element, options)
 	 */
 	this.renderDots = function(value, max)
 	{
-		return "\u25cf".repeat(value) + "\u25cb".repeat(max - value);
+		return '<span title="' + value + '">' + "\u25cf".repeat(value) + "\u25cb".repeat(max - value) + '</span>';
 	};
 }
