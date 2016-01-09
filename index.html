@@ -74,6 +74,31 @@
 					}
 				});
 				
+				$(document).on('click', '[data-popover]', function(e) {
+					e.preventDefault();
+					
+					if($('#popover .content').text() == $(this).attr('data-popover'))
+					{
+						hidePopover();
+					}
+					else
+					{
+						$('#popover .content').text($(this).attr('data-popover'));
+						$('#popover').show();
+					}
+				});
+				
+				$('#popover').click(function(e) {
+					e.preventDefault();
+					hidePopover();
+				});
+				
+				function hidePopover()
+				{
+					$('#popover .content').empty();
+					$('#popover').hide();
+				}
+				
 				generateNewCharacter();
 			});
 		</script>
@@ -217,6 +242,7 @@
 				<div class="section group">
 					<div class="col span_1_of_3">
 						<h3>Merits and Flaws</h3>
+						<ul data-property="merits-and-flaws"></ul>
 					</div>
 					<div class="col span_1_of_3">
 						<h3>Quintessence</h3>
@@ -232,5 +258,9 @@
 				by <a href="">Stephen Dewhurst</a> and <a href="">Ben Hendel-Doying</a>
 			</section>
 		</footer>
+		<div id="popover">
+			<a href="#" class="close">&#x274c;</a>
+			<div class="content"></div>
+		</div>
 	</body>
 </html>

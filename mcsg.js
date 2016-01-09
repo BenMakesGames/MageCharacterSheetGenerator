@@ -2,6 +2,33 @@
 
 Character.prototype.CULTURES = [ 'american' ];
 
+// from http://www.deathquaker.org/gaming/meritsflaws.html
+Character.prototype.MERITS = {
+	// psychological merits
+	code_of_honor: 'You follow a strict personal code, and you either gain 3 extra dice to resist supernatural persuasions that would make you break your code, or the would-be persuader has to roll at a +2 difficulty.',
+	dual_nature: 'You have two purposes in life; you can choose two Natures and regain Willpower when satisfying the requirements for either one (or both of them). These Natures should be complimentary to one another-this is a Merit, not a Derangement.',
+	gall: 'You got moxy, kid. Add an extra die to any Social roll requiring backbone.',
+	loyalty: 'You are devoted to a person, group, or cause, and easily resist attempts to persuade you away from the object of your loyalty. You also gain a Willpower bonus (in the form of bonus dice, or increased difficulty for your opponent) to try and resist supernatural forms of persuasion that challenge your loyalty.',
+};
+
+Character.prototype.FLAWS = {
+	// psychological flaws
+	black_and_white: 'You see all situations in black and white, good and evil, etc. In situations where this limited, judgmental way of thinking may hinder your reaction to something or cause you to act socially inappropriate, add a +1 difficulty to social or whatever rolls.',
+	compulsion: 'You have a specific compulsion which may cause you problems. You have to spend a temporary Willpower point to fight the compulsion for a short time.',
+	compulsive_speech: 'For whatever reason, you have difficulty sticking to the rule, "If you can\'t say anything nice, don\'t say it at all." 1 point makes you talkative and a bit blunt; 2 points makes you a complete prick.',
+	curiosity: 'Your incredible curiosity often overrides your common sense. Resisting temptation requires a successful Wits roll, difficulty depending on the situation. A very bad flaw to take with certain evil sadistic Storytellers. A 3-point version in Bastet makes you obsessed with any mystery you come across, and you\'ll do anything to solve it.',
+	dark_secret: 'There\'s something about you which you don\'t want people to know, and it would be very bad if they did (or at least you think it would be).',
+	deranged: 'You have a permanent, severe mental disorder. You may spend Willpower to fight it at points, but you will never get rid of it. Definitely check with your ST, and possibly your fellow players, before taking this one.',
+	driving_goal: 'You have some goal which is at the basis of all your motivations, though it is of such depth or impossibility, it could probably never be achieved. Your obsession with your vision can temporarily be soothed by spending Willpower.',
+	flashbacks: 'When under pressure and/or in the presence of something which reminds you of something unpleasant in your past, you flashback to that past event. Whilst in a flashback, everything to you is as it was then.',
+	hatred: 'There is something out there which you absolutely loathe, and will do anything to destroy it. You have to succeed a Willpower roll not to go after the object of your hatred, and the appropriate character types will have to make frenzy checks.',
+	hero_worship: 'You absolutely idolize someone, and disobeying them requires an effort of will (spending Willpower or succeeding a Willpower roll at 5+ difficulty). You also are at +2 difficulty to any roll that may force you to admit/realize that your hero may be in the wrong.',
+	inferiority_complex: 'No matter what you do, by your standards, it\'s just not good enough. In situations requiring you to take charge and strut your stuff, add +1 to all difficulties.',
+	intolerance: 'You have difficulty tolerating a specific thing or type of person. +2 difficulty on rolls involving that thing.',
+	lifesaver: 'You revere all life and will not risking killing someone at all costs. Unfortunately, in the World of Darkness, this can sometimes be a problem.',
+	low_self_image: 'Suffering from a low self-esteem, you have -2 dice in situations where you don\'t expect to succeed, or you may have to make Willpower rolls to do something that requires self-confidence.',
+};
+
 Character.prototype.NAMES = {
 	american: {
 		first: [ 'Abby', 'Aileen', 'Ben', 'Claire', 'Darren', 'Erica', 'Finn', 'Frank', 'Jessica', 'Jake', 'Laura', 'Liz', 'Lyle', 'Katie', 'Sandy', 'Stephen', 'Tess', 'Zach' ],
@@ -89,8 +116,8 @@ function Character($element, options)
 		},
 
 		backgrounds: { }, // ex: { allies: { value: 5, detail: "the vampire king" }, library: { value: 3 } }
-		merits: [], // a list of strings
-		flaws: [], // a list of strings
+		merits: [], // a list of merit keys, from this.MERITS
+		flaws: [], // a list of merit keys, from this.FLAWS
 		
 		// anything else you want to add?
 	};
@@ -195,6 +222,11 @@ function Character($element, options)
 		
 		// just as an example, everyone gets pilot 5. no real reason. just an example.
 		_this.changeAbility('pilot', 5);
+		
+		
+		// Object.keys(some_var) returns an array of keys which exist for the object "some_var"
+		_this.stats.merits.add(Object.keys(_this.MERITS).sample());
+		_this.stats.flaws.add(Object.keys(_this.FLAWS).sample());
 	
 	}; // end of generateCharacter method
 	
@@ -251,6 +283,20 @@ function Character($element, options)
 		_this.renderScoresWithDots(_this.stats.attributes, 'specialty');
 		_this.renderAbilities();
 		_this.renderScoresWithDots(_this.stats.spheres, 'focus');
+		
+		$element.find('[data-property="merits-and-flaws"]').empty();
+		
+		$.each(_this.stats.merits, function(i, merit) {
+			var $a = $('<a/>');
+			$a.attr('href', '').attr('data-popover', _this.MERITS[merit]).html(merit.titleize());
+			$element.find('[data-property="merits-and-flaws"]').append($('<li/>').append($a));
+		});
+		
+		$.each(_this.stats.flaws, function(i, flaw) {
+			var $a = $('<a/>');
+			$a.attr('href', '').attr('data-popover', _this.FLAWS[flaw]).html(flaw.titleize());
+			$element.find('[data-property="merits-and-flaws"]').append($('<li/>').append($a));
+		});
 	};
 	
 	this.renderAbilities = function()
@@ -303,5 +349,4 @@ function Character($element, options)
 	};
 	
 	generateCharacter();
-
 } // Character
