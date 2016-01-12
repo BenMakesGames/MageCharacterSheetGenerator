@@ -75,8 +75,8 @@ Character.prototype.MERITS = [
 	{ name: 'Guardian Angel' },
 	{ name: 'Honeyed Tongue', description: 'You\'ve sold gallons of snake oil and thousands of deeds to the Brooklyn Bridge, and most customers still think they\'re satisfied. All subterfuge attempts gain one automatic success.' },
 	{ name: 'Luck' },
-	{ name: 'Medium' },
-	{ name: 'Natural Channel' },
+	{ name: 'Medium', description: 'You have the ability to see and interact with ghosts. Sometimes, the Restless may seek you out for favors. Depending on the ghosts you meet, this could be a very good or very bad thing.' },
+	{ name: 'Natural Channel', description: 'You have a natural connection to the spirit world. If you are capable of doing so, the difficulty to cross the Gauntlet is -1. Spirits are also more likely to act favorably toward you.' },
 	{ name: 'Precognition', description: 'You have glimpses of the future. Though you can enter a trance and try to summon a vision, this foresight usually comes out of nowhere, and can be quite shocking in some circumstances.' },
 	{ name: 'Prophetic Ability', description: 'You see and understand (or try to) signs and portents sent by the Powers That Be, either through dreams or just a peculiar insight into everyday events. Your insights and visions are usually obscure, and it may take time and interpretation to get a grasp on their full indications.' },
 	{ name: 'Shapechanger Kin', description: 'You are Kinfolk to one of the Changing Breeds, and are valued by them as allies (and breeding stock). You are immune to the Delirium, and depending on your standing with your cousins, may be able to learn some Gifts. For an additional 5-7 freebies, you may have 1-2 points of Gnosis. For more information, see Kinfolk: Unsung Heroes and/or other Werewolf supplements.' },
@@ -141,7 +141,7 @@ Character.prototype.FLAWS = [
 	{ name: 'Lifesaver', description: 'You revere all life and will not risking killing someone at all costs. Unfortunately, in the World of Darkness, this can sometimes be a problem.' },
 	{ name: 'Low Self-image', description: 'Suffering from a low self-esteem, you have -2 dice in situations where you don\'t expect to succeed, or you may have to make Willpower rolls to do something that requires self-confidence.' },
 	{ name: 'Masochist/Sadist' },
-	{ name: 'Nightmares' },
+	{ name: 'Nightmares', description: 'You\'re constantly plagued by nightmares, which at the worst may indicate there\'s something nasty in your fate, and at the least will make you cranky and irritable most of the time. A particularly bad night may cause you to lose -1 dice on all rolls for some time afterward.' },
 	{ name: 'Pacifist' },
 	{ name: 'Phobia' },
 	{ name: 'Sensation Junkie' },
@@ -152,10 +152,10 @@ Character.prototype.FLAWS = [
 	{ name: 'Vengeance' },
 	
 	// mental
-	{ name: 'Absent-minded' },
+	{ name: 'Absent-minded', description: 'You have a lousy short-term memory, and need to make a Wits roll to remember more than standard knowledge (like your name, address, etc.). You can spend Willpower as a last resort to try and remember. ' },
 	{ name: 'Amnesia' },
-	{ name: 'Confused' },
-	{ name: 'Overconfident' },
+	{ name: 'Confused', description: 'You have a lot of trouble focusing and/or making sense of the world around you. You can spend Willpower to temporarily overcome your confusion.' },
+	{ name: 'Overconfident', description: 'You think you can do everything even though you probably can\'t, and you try to prove your belief as often as possible.' },
 	{ name: 'Weak-willed', description: 'You can only spend Willpower when survival is at stake or it is appropriate to your Nature (Auspice, Legacy, etc.).' },
 	
 	// awareness
@@ -197,7 +197,7 @@ Character.prototype.FLAWS = [
 	{ name: 'Inconvenient Alliance', description: 'You have an ally with someone who is discomforting to you and/or your circle, but can\'t easily get rid of him because of a favor owed, sense of guilt, or whatever. Level of flaw reflects how controversial or dangerous this ally is.' },
 	{ name: 'Notoriety', description: 'You did something, or at least others think you did, that is frowned upon by your peers and elders. -2 dice to all social rolls dealing with your sept/chantry/etc.' },
 	{ name: 'Probationary Member', description: 'You\'re not on the greatest terms with the group (tradition, clan, tribe, etc.) you belong to and are highly suspect of various naughtiness. You may not be privy to the normal priveleges of being part of your group, nor will you necessarily receive aid when you ought to, etc.' },
-	{ name: 'Outsider', description: 'Though you\'re not exactly infamous, you have a poor reputation amongst your kind. +2 difficulty on all social rolls when interacting with your group (tradition, clan, tribe, etc).' },
+	{ name: 'Outsider', description: 'Though you\'re not exactly infamous, you have a poor reputation amongst your kind. +2 difficulty on all social rolls when interacting with your group (tradition, clan, tribe, etc.).' },
 	{ name: 'Rival', description: 'Someone within your own society viciously competes against you and tries to undermine your plans; really obsessive rivals may even want you dead.' },
 	{ name: 'Twisted Upbringing' },
 	
