@@ -3,6 +3,7 @@
 // .prototype is weird, and even I don't fully understand it. JS is real weird about objects.
 Character.prototype.CHANCE_TO_REPEAT_ABILITIES = 50;
 Character.prototype.CHANCE_TO_REPEAT_SPHERES = 75;
+Character.prototype.CHANCE_TO_REPEAT_BACKGROUNDS = 70;
 Character.prototype.ALLOW_ARCHMAGES = false;
 
 Character.prototype.TRADITIONS = [
@@ -264,6 +265,21 @@ Character.prototype.SPECIALTIES = {
 	lore: [ 'wendigo' ]
 }
 
+Character.prototype.BACKGROUNDS = [
+	'Allies', 'Alternate Identity', 'Arcane', 'Artifact', 'Avatar', 'Backup', 'Blessing',
+	'Certification', 'Chantry', 'Cholé', 'Cloaking', 'Companion', 'Construct',
+	'Contacts', 'Cult', 'Demesne', 'Destiny', 'Dream', 'Enhancement', 'Fame',
+	'Familiar', 'Guide', 'Influence', 'Legend', 'Library', 'Mentor', 'Node',
+	'Past Lives', 'Rank', 'Resources', 'Retainers', 'Sanctum', 'Spirit Allies',
+	'Spirit Mentor', 'Talisman', 'Wonder'
+];
+
+// for any backgrounds you want to have a detail associated with, provide a list of possible details here
+Character.prototype.BACKGROUND_DETAILS = {
+	//'Allies': [ ],
+	//'Contacts': [ ],
+};
+
 // these abilities will be given specialties if the character has ANY dots in them
 Character.prototype.ABILITIES_REQUIRING_SPECIALTY = [
 	'linguistics', 'lore'
@@ -337,7 +353,7 @@ function Character($element, options)
 			time: { value: 0, focus: "" },
 		},
 
-		backgrounds: { }, // ex: { allies: { value: 5, detail: "the vampire king" }, library: { value: 3 } }
+		backgrounds: [ ], // ex: [ { name: 'Allies', value: 5, detail: "the vampire king" }, { name: 'Library', value: 3 } ]
 		merits: [], // a list of merits, from this.MERITS
 		flaws: [], // a list of flaws, from this.FLAWS
 		
@@ -478,6 +494,9 @@ function Character($element, options)
 			_this.generateWillpower(5, 25); // add up to 5 more points, with a 25% chance for each point
 			
 			_this.generateMeritsAndFlaws(1, 4);
+			
+			_this.changeBackground('Avatar', 1); // all mages get Avatar +1
+			_this.generateBackgrounds(7 + Math.floor(Math.random() * 3));
 		}
 
 		// a goodish chance to add 'aging' to characters 50+ years old
@@ -497,6 +516,83 @@ function Character($element, options)
 		
 	}; // end of generateCharacter method
 
+	this.generateBackgrounds = function(points)
+	{
+		if(_this.stats.basics.tradition == 'Ahl-i-Batin')
+		{
+			_this.changeBackground('Arcane', 1);
+		}
+		
+		var background;
+		var backgroundsLessThan5 = [];
+		
+		console.log(_this.stats.backgrounds);
+		
+		$.each(_this.stats.backgrounds, function(i, background) {
+			if(background.value < 5)
+				backgroundsLessThan5.add(background.name);
+		});
+		
+		while(points > 0)
+		{
+			if(backgroundsLessThan5.length > 0 && Math.random() * 100 < _this.CHANCE_TO_REPEAT_BACKGROUNDS)
+			{
+				background = backgroundsLessThan5.sample();
+				
+				// dodge 4-value backgrounds, and any "avatar" re-picks, up to once
+				if(_this.stats.backgrounds[_this.getBackgroundByName(background)].value == 4 || _this.stats.backgrounds[_this.getBackgroundByName(background)].name == 'Avatar') background = backgroundsLessThan5.sample();
+			}
+			else
+			{
+				// pick a random background from the list that we don't already have a point in
+				do
+				{
+					background = _this.BACKGROUNDS.sample();
+				} while(_this.getBackgroundByName(background) >= 0);
+				
+				backgroundsLessThan5.add(background);
+			}
+				
+			if(_this.changeBackground(background, 1) == 5)
+				backgroundsLessThan5.remove(background);
+			
+			points--;
+		}
+	};
+	
+	/**
+	 * Adds "points" dots to the background named "name"
+	 * @return New value of background
+	 */
+	this.changeBackground = function(name, points)
+	{
+		var backgroundIndex = this.getBackgroundByName(name);
+		
+		if(backgroundIndex >= 0)
+		{
+			_this.stats.backgrounds[backgroundIndex].value += points;
+			
+			if(_this.stats.backgrounds[backgroundIndex].value > 5) _this.stats.backgrounds[backgroundIndex].value = 5;
+			
+			return _this.stats.backgrounds[backgroundIndex].value;
+		}
+		else
+		{
+			var detail = _this.BACKGROUND_DETAILS.hasOwnProperty(name) ? _this.BACKGROUND_DETAILS[name].sample() : '';
+			
+			_this.stats.backgrounds.add({ name: name, value: points, detail: detail });
+			
+			return points;
+		}
+	};
+	
+	this.getBackgroundByName = function(name)
+	{
+		return _this.stats.backgrounds.findIndex(function(item) {
+			return item.name == name;
+		});
+	};
+	
 	/**
 	 * Removes "points" dots randomly from among "possibleAttributes"
 	 * @return the number of points that were successfully removed
@@ -779,17 +875,6 @@ function Character($element, options)
 		return _this.stats.abilities.hasOwnProperty(ability) ? this.stats.abilities[ability].value : 0;
 	};
 	
-	/*
-	 * adds "amount" to the specified "background", creating it if it does not already exist
-	 */
-	this.changeBackground = function(background, amount)
-	{
-		if(_this.stats.backgrounds.hasOwnProperty(background))
-			_this.stats.backgrounds[background].value += amount;
-		else
-			_this.stats.backgrounds[background] = { value: amount, detail: "" };
-	};
-	
 	/**
 	 * @return the background's value, or 0 if it does not exist
 	 */
@@ -810,10 +895,12 @@ function Character($element, options)
 				$element.find('[data-property="' + stat + '"]').html(value);
 		});
 
+		// render attributes, abilities, and spheres
 		_this.renderScoresWithDots(_this.stats.attributes, 'specialty');
 		_this.renderAbilities();
 		_this.renderScoresWithDots(_this.stats.spheres, 'focus');
 		
+		// render merits and flaws
 		$element.find('[data-property="merits-and-flaws"]').empty();
 		
 		$.each(_this.stats.merits, function(i, merit) {
@@ -836,6 +923,14 @@ function Character($element, options)
 			}
 			else
 				$element.find('[data-property="merits-and-flaws"]').append($('<li/>').append(flaw.name.titleize()));
+		});
+		
+		// render backgrounds
+		$element.find('[data-property="backgrounds"]').empty();
+		
+		$.each(_this.stats.backgrounds, function(i, background) {
+			$element.find('[data-property="backgrounds"]').append($('<dt/>').append(background.name));
+			$element.find('[data-property="backgrounds"]').append($('<dd/>').append(_this.renderDots(background.value, 5)));
 		});
 	};
 	
