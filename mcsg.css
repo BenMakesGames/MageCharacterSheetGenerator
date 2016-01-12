@@ -89,6 +89,11 @@ dl > dd {
 	font-weight: bold;
 }
 
+.specialty {
+	font-style: italic;
+	color: #666;
+}
+
 #character-sheet h2 {
 	text-align: center;
 	background-color: #bdf;

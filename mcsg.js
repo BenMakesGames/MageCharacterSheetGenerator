@@ -2,6 +2,8 @@
 
 Character.prototype.CULTURES = [ 'american' ];
 
+Character.prototype.CHANCE_TO_REPEAT_ABILITIES = 50;
+
 // from http://www.deathquaker.org/gaming/meritsflaws.html
 Character.prototype.MERITS = {
 	// psychological merits
@@ -31,9 +33,12 @@ Character.prototype.FLAWS = {
 
 Character.prototype.NAMES = {
 	american: {
-		first: [ 'Abby', 'Aileen', 'Ben', 'Claire', 'Darren', 'Erica', 'Finn', 'Frank', 'Jessica', 'Jake', 'Laura', 'Liz', 'Lyle', 'Katie', 'Sandy', 'Stephen', 'Tess', 'Zach' ],
-		last: [ 'Arze', 'Baker', 'Carpenter', 'Dewhurst', 'Farrow', 'Hendel', 'Lantz', 'MacKay', 'Rogers', 'Smith', 'Stanonik', 'Swanson' ],
-	},
+		first: {
+			female: [ 'Abby', 'Aileen', 'Claire', 'Erica', 'Jessica', 'Katie', 'Laura', 'Liz', 'Sandy', 'Tess' ],
+			male: [ 'Ben', 'Darren', 'Finn', 'Frank', 'Jake', 'Lyle', 'Stephen', 'Zach' ]
+		},
+		last: [ 'Arze', 'Baker', 'Carpenter', 'Dewhurst', 'Farrow', 'Hendel', 'Lantz', 'MacKay', 'Rogers', 'Smith', 'Stanonik', 'Swanson' ]
+	}
 };
 
 Character.prototype.TRADITIONS = [
@@ -48,6 +53,61 @@ Character.prototype.TRADITIONS = [
 	'Virtual Adepts',
 ];
 
+Character.prototype.ABILITIES = [
+	'alertness', 'athletics', 'awareness', 'brawl', 'dodge',
+	'expression', 'intimidation', 'leadership', 'streetwise', 'subterfuge',
+	
+	'crafts', 'drive', 'etiquette', 'firearms', 'meditation',
+	'melee', 'performance', 'stealth', 'survival', 'technology',
+	
+	'academics', 'computer', 'cosmology', 'enigmas', 'investigation',
+	'law', 'linguistics', 'medicine', 'occult', 'science',
+];
+
+Character.prototype.SPECIALTIES = {
+	strength: [ 'iron grip' ],
+	stamina: [ 'tireless', 'pain resistant' ],
+	dexterity: [ '???' ],
+	manipulation: [ '???' ],
+	charisma: [ '???' ],
+	appearance: [ 'otherworldly', 'respectable', 'sexy', 'expressive' ],
+	wits: [ 'combat reflexes' ],
+	intelligence: [ 'creative', 'good memory', 'book-smart' ],
+	perception: [ '???' ],
+	
+	alertness: [ 'ambushes', 'concealed weapons', 'followers', 'city', 'forest' ],
+	athletics: [ 'dancing', 'dexterity', 'stamina', 'flexibility', 'throwing', 'soccer', 'baseball', 'football', 'ultimate frisbee' ],
+	awareness: [ 'spirits', 'talismans' ],
+	brawl: [ 'boxing', 'dirty fighting', 'self-defense', 'kicking', 'disarming', 'karate' ],
+	dodge: [ '???' ],
+	expression: [ 'poetry', 'acting' ],
+	intimidation: [ '???' ],
+	leadership: [ '???' ],
+	streetwise: [ 'drugs', 'gangs', 'weapons' ],
+	subterfuge: [ '???' ],
+	
+	crafts: [ 'painting', 'sculpting', 'smithing', 'mechanics', 'carpentry', 'home repair' ],
+	drive: [ 'motorcycle', 'off-road', 'losing tails', 'sudden stops' ],
+	etiquette: [ 'high society', 'mage society', 'street culture' ],
+	firearms: [ 'automatics', 'fast-draw', 'sniping' ],
+	meditation: [ '???' ],
+	melee: [ 'axes', 'disarming', 'improvised weapons', 'knives', 'stakes', 'swords', 'throwing' ],
+	performance: [ 'speech', 'singing', 'motivational', 'breakdancing', 'stand-up comedy', 'acting' ],
+	stealth: [ 'crowds', 'shadowing' ],
+	survival: [ 'forest', 'tundra', 'trapping', 'desert', 'mountaineering', 'medicine', 'urban' ],
+	technology: [ 'engines', 'security', 'technomagic' ],
+	
+	academics: [ 'architecture', 'history', 'literature', 'medieval studies', 'music' ],
+	computer: [ 'data retrieval', 'viruses', 'encryption' ],
+	cosmology: [ 'deep umbra', 'gauntlet', 'nodes', 'realms', 'spirit names' ],
+	enigmas: [ '???' ],
+	investigation: [ 'poison', 'weapons', 'forensics', 'crime scenes' ],
+	law: [ 'corporate', 'crimial', 'police procedure' ],
+	linguistics: [ 'french', 'english', 'spanish', 'german', 'japanese', 'chinese', 'arabic', 'russian' ],
+	medicine: [ 'poisons', 'surgery', 'emergency care', 'pharmaceuticals', 'pathology', 'pediatrics' ],
+	occult: [ 'death mythology', 'creation myths', 'folk tales', 'ghosts', 'infernalism', 'witches', 'new age', 'voudoun' ],
+	science: [ 'chemistry', 'biology', 'astronomy', 'physics', 'metallurgy', 'geology', 'computer science' ],
+}
 
 Character.prototype.DEFAULT_OPTIONS = {
 	'class': 'mage',
@@ -78,6 +138,8 @@ function Character($element, options)
 	this.stats = {
 		// I'm keeping all scalar values in "basics"
 		basics: {
+			sex: "",
+			age: 0,
 			name: "",
 			tradition: "",
 			nature: "",
@@ -209,19 +271,29 @@ function Character($element, options)
 			// and of course, feel free to add more methods, below!
 		*/
 		
-		// some sample code, that does things 100% randomly
+		// example character generation:
+		
+		// some feminist part of me questions the need for a sex attribute :P
+		_this.stats.basics.sex = [ 'male', 'female' ].sample();
+		
+		// this probably looks really weird :P I will explain: we're defining a function, and then immediately calling it, passing
+		// a random number. so Math.random() * 135 gets passed in as x, and we're assigning the return value to age.
+		// I got this function by playing around with a graphing calculator. check out its graph to see; the majority of "x" values
+		// land on 25; 0 lands on 9; 135 lands on, like, 102, or something.
+		_this.stats.basics.age = Math.floor(
+			(function(x) { return Math.pow((x - 50) / 20, 3) + 25; })(Math.random() * 135)
+		);
+		
+		// pick a random culture; used, along with sex, for picking a name
 		var culture = _this.CULTURES.sample();
-		
-		_this.stats.basics.name = _this.NAMES[culture].first.sample() + ' ' + _this.NAMES[culture].last.sample();
+
+		_this.stats.basics.name = _this.NAMES[culture].first[_this.stats.basics.sex].sample() + ' ' + _this.NAMES[culture].last.sample();
+
+		// pick a random tradition
 		_this.stats.basics.tradition = _this.TRADITIONS.sample();
-		
-		// 1-5 for each attribute
-		$.each(attributes, function(i, attribute) {
-			_this.stats.attributes[attribute].value = Math.floor(Math.random() * 5) + 1;
-		});
-		
-		// just as an example, everyone gets pilot 5. no real reason. just an example.
-		_this.changeAbility('pilot', 5);
+
+		_this.generateAttributes();
+		_this.generateAbilities(27);
 		
 		
 		// Object.keys(some_var) returns an array of keys which exist for the object "some_var"
@@ -229,6 +301,95 @@ function Character($element, options)
 		_this.stats.flaws.add(Object.keys(_this.FLAWS).sample());
 	
 	}; // end of generateCharacter method
+
+	/*
+	 * called by generateCharacter; should only be called once!
+	 */
+	this.generateAttributes = function()
+	{
+		// okay, so sample(3) picks 3 random items from the array... this array has 3 elements... so basically we're picking all 3, but in a random order!
+		var attributePreferences = [['strength', 'stamina', 'dexterity'], ['charisma', 'manipulation', 'appearance'], ['intelligence', 'perception', 'wits']].sample(3);
+		
+		_this.assignAttributePoints(attributePreferences[0], 7);
+		_this.assignAttributePoints(attributePreferences[1], 5);
+		_this.assignAttributePoints(attributePreferences[2], 3);
+	};
+	
+	this.assignAttributePoints = function(possibleAttributes, points)
+	{
+		var attribute;
+	
+		// while we have points left to assign, and attributes left we can assign to
+		while(points > 0 && possibleAttributes.length > 0)
+		{
+			// pick a random attribute
+			attribute = possibleAttributes.sample();
+			
+			// pick again if the chosen attribute is 4; if we happen to pick the same thing again, that's fine
+			if(_this.stats.attributes[attribute].value == 4) attribute = possibleAttributes.sample();
+			
+			// increase the selected attribute by 1
+			_this.stats.attributes[attribute].value++;
+			points--;
+			
+			if(_this.stats.attributes[attribute].value == 4)
+			{
+				// when we hit 4, assign a specialty
+				_this.stats.attributes[attribute].specialty = _this.SPECIALTIES[attribute].sample();
+			}
+			else if(_this.stats.attributes[attribute].value == 5)
+			{
+				// if we hit 5, remove the current attribute from the list of attributes we can increase
+				possibleAttributes.remove(attribute);
+			}
+		}
+	};
+	
+	this.generateAbilities = function(num)
+	{
+		var existingAbilitiesLessThan5 = [];
+		var ability;
+	
+		for(i = 0; i < num; i++)
+		{
+			if(Math.random() * 100 < _this.CHANCE_TO_REPEAT_ABILITIES && existingAbilitiesLessThan5.length > 0)
+			{
+				// pick a random ability to increase
+				ability = existingAbilitiesLessThan5.sample();
+				
+				// if we picked an ability whose value is 4, pick a new ability (we may pick another ability of value 4, or even the same one, and that's fine)
+				if(_this.stats.abilities[ability].value == 4) ability = existingAbilitiesLessThan5.sample();
+			}
+			else
+			{
+				ability = _this.pickNewAbility();
+				existingAbilitiesLessThan5.add(ability);
+			}
+
+			_this.changeAbility(ability, 1);
+			
+			if(_this.stats.abilities[ability].value == 5)
+				existingAbilitiesLessThan5.remove(ability);
+		}
+	};
+	
+	this.pickNewAbility = function()
+	{
+		// @TODO pick an ability the character does not already have, and which they are eligible to learn
+		
+		// super-basic code that doesn't do any checks
+		
+		// 1: make a copy of the ABILITIES array. using array.slice(0) is a hacky way to do this.
+		var unknownAbilities = _this.ABILITIES.slice(0);
+		
+		// 2: iterate over all of the character's current abilities, removing each from the list of all abilities
+		$.each(_this.stats.abilities, function(ability) {
+			unknownAbilities.remove(ability);
+		});
+		
+		// 3: "unknownAbilities" now lives up to its name; return one, at random
+		return unknownAbilities.sample();
+	};
 	
 	/*
 	 * adds "amount" to the specified "ability", creating it if it does not already exist
@@ -239,6 +400,24 @@ function Character($element, options)
 			_this.stats.abilities[ability].value += amount;
 		else
 			_this.stats.abilities[ability] = { value: amount, speciality: "" };
+
+		// don't allow value to go above 5 or below 0
+		if(_this.stats.abilities[ability].value > 5) _this.stats.abilities[ability].value = 5;
+		else if(_this.stats.abilities[ability].value < 0) _this.stats.abilities[ability].value = 0;
+			
+			
+		if(_this.stats.abilities[ability].value >= 4)
+		{
+			// if the ability's value is 4+, and there's no specialty for it, pick a specialty!
+			if(!_this.stats.abilities[ability].hasOwnProperty('specialty') || _this.stats.abilities[ability].speciality == '')
+				_this.stats.abilities[ability].specialty = _this.SPECIALTIES[ability].sample();
+		}
+		else
+		{
+			// if the ability's value is <4, and there IS a specialty, remove that specialty
+			if(_this.stats.abilities[ability].hasOwnProperty('specialty') && _this.stats.abilities[ability].speciality != '')
+				_this.stats.abilities[ability].specialty = '';
+		}
 	};
 	
 	/**
@@ -310,14 +489,20 @@ function Character($element, options)
 			"", "", ""
 		];
 	
-		$.each(abilityKeys, function(i, stat) {
-			var details = _this.stats.abilities[stat];
-			var text = _this.renderDots(details.value, 5);
-		
-			if(stat.hasOwnProperty('specialty') && details.specialty != '')
-				text += ' (' + details.specialty + ')';
-			
-			columns[Math.floor(i / abilitiesPerColumn)] += '<dt>' + stat.titleize() + '</dt><dd>' + text + '</dd>';
+		var count = 0;
+		$.each(_this.ABILITIES, function(i, stat) {
+			if(_this.stats.abilities.hasOwnProperty(stat))
+			{
+				var details = _this.stats.abilities[stat];
+				var text = _this.renderDots(details.value, 5);
+
+				if(details.hasOwnProperty('specialty') && details.specialty != '')
+					columns[Math.floor(count / abilitiesPerColumn)] += '<dt>' + stat.titleize() + ' <span class="specialty">(' + details.specialty + ')</span></dt><dd>' + text + '</dd>';
+				else
+					columns[Math.floor(count / abilitiesPerColumn)] += '<dt>' + stat.titleize() + '</dt><dd>' + text + '</dd>';
+				
+				count++;
+			}
 		});
 		
 		$abilitiesSection.html(
@@ -333,8 +518,10 @@ function Character($element, options)
 			var details = scores[stat];
 			var text = _this.renderDots(details.value, 5);
 		
-			if(stat.hasOwnProperty(detailProperty) && details[detailProperty] != '')
-				text += ' (' + details[detailProperty] + ')';
+			if(details.hasOwnProperty(detailProperty) && details[detailProperty] != '')
+				$element.find('[data-property="' + stat + '-' + detailProperty + '"]').html('(' + details[detailProperty] + ')');
+			else
+				$element.find('[data-property="' + stat + '-' + detailProperty + '"]').empty();
 			
 			$element.find('[data-property="' + stat + '"]').html(text);
 		});
