@@ -30,26 +30,102 @@ Character.prototype.SPHERES = [
 ];
 
 // from http://www.deathquaker.org/gaming/meritsflaws.html
-// @TODO: finish these lists!
+// in addition to the "name" and "description" properties, there's also an "onAdd" property, which is a callback function to be called when the merit or flaw
+// is given to a character. see Huge Size for an example.
+/** @TODO: finish these lists! */
 Character.prototype.MERITS = [
-	// psychological merits
+	// psychological
 	{ name: 'Code of Honor', descripiton: 'You follow a strict personal code, and you either gain 3 extra dice to resist supernatural persuasions that would make you break your code, or the would-be persuader has to roll at a +2 difficulty.' },
 	{ name: 'Dual Nature', description: 'You have two purposes in life; you can choose two Natures and regain Willpower when satisfying the requirements for either one (or both of them). These Natures should be complimentary to one another-this is a Merit, not a Derangement.' },
 	{ name: 'Gall', description: 'You got moxy, kid. Add an extra die to any Social roll requiring backbone.' },
 	{ name: 'Loyalty', description: 'You are devoted to a person, group, or cause, and easily resist attempts to persuade you away from the object of your loyalty. You also gain a Willpower bonus (in the form of bonus dice, or increased difficulty for your opponent) to try and resist supernatural forms of persuasion that challenge your loyalty.' },
 	
-	{ name: 'Clear-sighted' },
-	{ name: 'Common sense' },
+	{ name: 'Clear-sighted', description: 'You are not fooled by illusions, and you get a Perception +Alertness roll, difficulty = opposing power\'s level +3, to see through supernatural illusions, such as those created by Obfuscation, Chimerstry, Chicanery, Gifts, etc.' },
+	{ name: 'Common Sense', description: 'You are full of practical wisdom. A great merit for starting characters, as you may receive advice from the Storyteller regarding how to handle certain situations.' },
 	{ name: 'Concentration' },
 	{ name: 'Eidetic Memory' },
 	{ name: 'Iron Will' },
 	{ name: 'Lightning Calculator' },
 	{ name: 'Self-confident', description: 'When you declare that you are spending Willpower for an automatic success on a roll, you do not lose the Willpower unless you fail the roll, due to the strength of your self-confidence. This only comes into effect regarding rolls at difficulty 6 or higher.' },
-	{ name: 'Time Sense' }
+	{ name: 'Time Sense', description: 'You have an inate sense of time, and can with a good deal of accuracy tell what time it is without a watch. In performing feats where timing may be essential (such as certain combat or athletic maneuvers), difficulties may be lowered or dropped.' },
+	
+	{ name: 'Acute Senses' },
+	{ name: 'Nightsight' },
+	
+	{ name: 'Ability Aptitude', description: 'Pick a single skill, talent, or knowledge: you\'re a whiz at whatver this is. -2 to difficulties relating to this ability.' },
+	{ name: 'Animal Magnetism', description: 'You have the "fuck me" aura, and receive a -2 difficulty on seduction and similar rolls (though this may inspire jealousy in the people who view you as competition). This is a Merit seldom taken seriously in the Chat Rooms, as it\'s been too often used by players whose intent is seldom gaming...' },
+	{ name: 'Ambidextrous', description: 'You are equally dextrous, or nearly so, with both hands, and use your "off" hand at no penalty. Difficulties to do two different tasks at once (one with each hand) are at +1 for both rolls, rather than +1 for the "right" hand and +3 for the other. Not useful if your ST isn\'t the nitpicky sort who doesn\'t give a shit about off-hand penalties and such...)' },
+	{ name: 'Crack Driver', description: 'This has been changed to "Expert Driver" in later books, but we all know what this Merit really means: you drive a car like you\'re on crack (but can do it without killing anyone). Difficult driving rolls are reduced by 2. You can take similar merits for piloting or driving other vehicles if appropriate for the character and campaign.' },
+	{ name: 'Culture Knack', description: 'You have a knack for fitting in wherever you are, and though you may not know them beforehand, you pick up on customs quickly. In appropriate situations, your social difficulties may be lowered, or you may be able to recover from a botched roll with another roll at normal difficulty.' },
+	{ name: 'Daredevil', description: 'You love to take risks, and are damn good at living through them. -2 difficulty on dangerous feats, and you can ignore a single 1 on your roll.' },
+	{ name: 'Graceful', description: 'You are extremely agile and delicate in your movements. -1 difficulty on all Dexterity rolls. Botches will still hurt, but it is possible to gracefully fall down, and you\'ll die before you look clumsy.' },
+	{ name: 'Extremely Educated, Skilled, or Talented', description: 'You have a large general amount of knowledge, skill, or talent, and have an automatic 1 in the appropriate ability pools. This is an "illusory" level however–if you want to increase your aptitude in a particular ability, you must buy the first dot as if you didn\'t have it, and then the second.' },
+	{ name: 'Natural Linguist', description: 'You\'re good with languages and language structures. 3 dice are added to any language-related roll, but you can\'t know anymore languages than your Linguistic score allows.' },
+	{ name: 'Well-Traveled', description: 'You are knowledgeable of the ways of the world from your travels and studies. Once per game session, you can gain an automatic success on a non-magical roll to gain a piece of information.' },
+	
+	// supernatural
+	{ name: 'Beast Affinity', description: 'Animals are unusually drawn to you, and though you can\'t speak with them, you can communicate with them on a limited level using tone of voice and body language. 1-point affinity is with one specific type of animal, 2-point is with one group, 3 is with all natural animals. In appropriate settings, a 4-point version extends your affinity to supernatural animals as well.' },
+	{ name: 'Burning Aura', description: 'Your aura is unusually brilliant; even people who can\'t read auras will be inexplicably drawn to you. Some may see you as a threat or a snack.' },
+	{ name: 'Charmed Existence', description: 'Somebody up there likes you. Ignore a single one on every roll you make.' },
+	{ name: 'Danger Sense' },
+	{ name: 'Fae Blood', description: 'You are kinain–kin to the Fair Folk. You have just a touch of Glamour in your system and are therefore detectable by the Kithain and more easily Enchanted. Your Banality is probably no higher than 6. Your ST may allow you to buy a Glamour pool, Fae Gifts, and perhaps even learn Cantrips. If you are interested in such things, see The Enchanted and, moreover, my house rules for suggestions and more details.' },
+	{ name: 'Faerie Affinity' },
+	{ name: 'Green Thumb' },
+	{ name: 'Ghoul', description: 'You have been feeding regularly on Vampire Blood and therefore have 1 dot in Potence and a Blood Pool with which you may use to heal yourself, and possibly eventually learn some Disciplines. You may well be Blood Bound, and if not, you have to find a way to keep feeding on Vitae without becoming so. If you go without Vampire Blood for a month, you will lose your powers.' },
+	{ name: 'Guardian Angel' },
+	{ name: 'Honeyed Tongue', description: 'You\'ve sold gallons of snake oil and thousands of deeds to the Brooklyn Bridge, and most customers still think they\'re satisfied. All subterfuge attempts gain one automatic success.' },
+	{ name: 'Luck' },
+	{ name: 'Medium' },
+	{ name: 'Natural Channel' },
+	{ name: 'Precognition', description: 'You have glimpses of the future. Though you can enter a trance and try to summon a vision, this foresight usually comes out of nowhere, and can be quite shocking in some circumstances.' },
+	{ name: 'Prophetic Ability', description: 'You see and understand (or try to) signs and portents sent by the Powers That Be, either through dreams or just a peculiar insight into everyday events. Your insights and visions are usually obscure, and it may take time and interpretation to get a grasp on their full indications.' },
+	{ name: 'Shapechanger Kin', description: 'You are Kinfolk to one of the Changing Breeds, and are valued by them as allies (and breeding stock). You are immune to the Delirium, and depending on your standing with your cousins, may be able to learn some Gifts. For an additional 5-7 freebies, you may have 1-2 points of Gnosis. For more information, see Kinfolk: Unsung Heroes and/or other Werewolf supplements.' },
+	{ name: 'Soothing Voice' },
+	{ name: 'Supernatural Companion', description: 'You have a close ally (essentially one person at Allies 3) belonging to a major supernatural group other than your own. You can call upon her in times of need (as she can you). Depending on the kind of being they are, there may be negative aspects to having this friend as well as positive ones (e.g. a Werewolf having a Vampire ally...).' },
+	{ name: 'Spirit Guide', description: 'A friendly Umbrood offers you advice and sometimes aid. You can combine this with the Mentor background to have the Guide be your teacher as well.' },
+	{ name: 'True Faith' },
+	{ name: 'True Love' },
+	{ name: 'Twin Link', description: 'You share a psychic, if not spiritual, link with one person. As a 4 point merit, you get +2 to Empathy/Awareness rolls when determining how your "twin" feels. As a 6 point merit, you have a bond with the twin that\'s nearly telepathic; you always know what this person is feeling and to a limited extent, thinking. Either member can block this if they wish, though doing so requires some concentration. If you are psychic or Awakened or have an appropriate ability, you can use this ability to sense a state your twin is in (for example, with Mind or Telepathy, you WILL know exactly what the person is thinking, with Life you will know his physical condition, etc.)' },
+	{ name: 'Unaging', description: 'For some reason, you never age. While this has its benefits, if you know people long enough, they\'ll start to notice you not getting any older, which may cause some suspicion. While it\'s unlikely you\'ll die of old age, this merit does not keep you from getting ill or wounded.' },
+	{ name: 'Unbondable', description: 'You can\'t be Blood Bound, no matter how much Vampire Blood you drink. For obvious reasons, if you\'re creating a Ghoul character, you have to pay twice the amount for the merit.' },
+	
+	// social
+	{ name: 'Good Old Boy/Girl', description: 'You\'re just a nice person, and people recognize and appreciate that. +1 die on social rolls when interacting with your fellow folk.' },
+	{ name: 'Innocent', description: 'You have an aura of childlike innocence (whether you really are or not). -2 difficulty on rolls involving Subterfuge or Manipulation.' },
+	{ name: 'Pitiable', description: 'You have an aura of child-like-ness/innocence about you, and many have the urge to pity and protect you (unless they\'re of a Nature that doesn\'t allow them that sort of thing). This can be helpful, but it may also be annoying.' },
+	
+	// supernatural ties
+	{ name: 'Faction Favorite', description: 'Someone of a tribe/clan/tradition/whatever favor you and will do a good deal to get on your good side, possibly to bring you over to them, especially if you\'re currently disparate. Note this probably means they expect greatness of you, so don\'t disappoint them. Alter social difficulties by 2 in your favor when dealing with this faction.' },
+	{ name: 'Favor', description: 'Someone of higher rank or ability than you in your supernatural society owes you a favor. Level of the Merit indicates how big the favor is.' },
+	{ name: 'Reputation', description: 'You\'ve built yourself an excellent reputation amongst your kind. Add 3 dice to Social pools when dealing with the people in your sept/clan/chantry/freehold/etc.' },
+
+	// material/mortal ties
+	{ name: 'Corporate CEO', description: 'You are the head or otherwise have heavy influence in a major corporation, and have access to the social and economic benefits that implies.' },
+	{ name: 'Hideaway', description: 'You have a little place somewhere nobody else knows about, fairly well-stocked. If people actively search for it, your ST will roll 2 dice at difficulty 6; at least one success indicates you have not been found. Failure gives them an idea, continual failures, at least four, will indicate that the seeker knows exactly where you live...' },
+	{ name: 'Hunted', description: 'Someone is aware of, or at least suspects, your true nature and believes you need to be caught and killed (or experimented upon, or...). This person may be mortal, but they are aware of the supernatural world and are immune to the Delirium.' },
+	{ name: 'Local Ties', description: 'You have influence and/or contacts in an important local institution, though the more you use these ties, the weaker they may become. Samples and their point levels include ties with the following: Park Department (1), Judicial (2), Church (2), Media (3), Corporate (3), Police (3), Political (3), and Underworld (3).' },
+	{ name: 'Mansion', description: 'You own a big ass mansion, probably with some pretentious name like "Shadowcliff." You are/should be able to support upkeep, servants, etc.' },
+	{ name: 'Nightclub', description: 'You own a fairly successful nightclub, which is a good place for meeting people, helping people out, and having plot-convenient fire-fights in, etc. Depending on the PC and Storyteller, some might consider this a Flaw.' },
+	{ name: 'Occult Library', description: 'You own a decent collection of works on arcane lore, and if you have access to it, can lower difficulties/add dice when trying to solve an occult mystery and/or generally learn more about the occult. Having this library doesn\'t automatically mean you\'re an occult expert; it just means you have convenient access to some knowledge.' },
+	
+	// physical
+	{ name: 'Catlike Balance', description: '-2 difficulty to rolls relating to balance.' },
+	{ name: 'Double-jointed', description: '-2 difficulty on any roll involving flexibility.' },
+	{ name: 'Huge Size', description: 'You may be as tall as seven feet and weigh as much as 400lbs. You have an extra Bruised Health Level.', onAdd: function(character) {
+		character.stats.basics.health++;
+	}	},
+	{ name: 'Light Sleeper' },
+	//{ name: 'Longevity' }, // would require special coding to prevent 'Aging' flaw
+	{ name: 'Poison Resistance', description: 'You have an innate ability to resist the effects of many toxins. Roll Stamina to resist the effects of poison, level of difficulty 5 and up, depending on potence of the poison.' },
+	
+	// mage-only
+	{ name: 'Avatar Companion', description: 'Your Avatar has another, lesser Avatar connected to it, usually in the body of another person. This companion will be drawn to you and may remember past incarnations and have other information useful to you and your Avatar. Unless you buy points in Allies, this companion will be of no special use except be tied to your life cycle.' },
+	//{ name: 'Conditional Magic', description: 'There is a condition set to the functionality of your magical effects; they may work better or worse depending on certain circumstances, e.g. time of day, who you\'re doing the magic on, etc. Difficulties may be raised or lowered by as much as 3 according to the circumstance; the degree of the merit or flaw depends upon how rare or common the circumstance is.' },
+	//{ name: 'Sphere Natural', description: 'You are really good with a particular sphere. Pay only three-quarters of the normal cost for raising a sphere level. This may be bought only once.' },
 ];
 
 Character.prototype.FLAWS = [
-	// psychological flaws
+	// psychological
 	{ name: 'Black and White', description: 'You see all situations in black and white, good and evil, etc. In situations where this limited, judgmental way of thinking may hinder your reaction to something or cause you to act socially inappropriate, add a +1 difficulty to social or whatever rolls.' },
 	{ name: 'Compulsion', description: 'You have a specific compulsion which may cause you problems. You have to spend a temporary Willpower point to fight the compulsion for a short time.' },
 	{ name: 'Compulsive Speech', description: 'For whatever reason, you have difficulty sticking to the rule, "If you can\'t say anything nice, don\'t say it at all." 1 point makes you talkative and a bit blunt; 2 points makes you a complete prick.' },
@@ -70,10 +146,89 @@ Character.prototype.FLAWS = [
 	{ name: 'Phobia' },
 	{ name: 'Sensation Junkie' },
 	{ name: 'Shy' },
-	{ name: 'Soft-hearted' },
+	{ name: 'Soft-hearted', description: 'You can\'t stand to witness suffering, and if you do, difficulties are at +2 for the next hour.' },
 	{ name: 'Territorial', description: 'You are extremely attached to your territory: if forced to leave your territory, you will be at +1 difficulty in most rolls because you are so disoriented. If someone passes through your territory without your permission, you will immediately attack him (make a frenzy check). Obviously this was created w/ shifters and vampires in mind, though it might be applicable to other character concepts.' },
 	{ name: 'Ulterior Motive' },
 	{ name: 'Vengeance' },
+	
+	// mental
+	{ name: 'Absent-minded' },
+	{ name: 'Amnesia' },
+	{ name: 'Confused' },
+	{ name: 'Overconfident' },
+	{ name: 'Weak-willed', description: 'You can only spend Willpower when survival is at stake or it is appropriate to your Nature (Auspice, Legacy, etc.).' },
+	
+	// awareness
+	{ name: 'Bad Sight' },
+	{ name: 'Blind' },
+	{ name: 'Color-blind' },
+	{ name: 'Deaf' },
+	{ name: 'Hard of Hearing' },
+	{ name: 'One Eye' },
+	
+	// aptitudes
+	//{ name: 'Ability Deficit', description: 'You\'re not in tune with your innate abilities, or maybe you just don\'t have any. You have 5 less points to spend on either Talents, Skills, or Knowledges, though you can still spend freebies on them. You cannot, however, have an ability in this category higher than 2 at the start of the game.' },
+	{ name: 'Graceless', description: 'You always look awkward, no matter what you\'re doing. +2 difficulty to all social rolls that involve making an impression.' },
+	{ name: 'Illiterate' },
+	{ name: 'Speech Impediment' },
+	
+	// supernatural
+	{ name: 'Bard\'s Tongue', description: 'What you say tends to come true; you can\'t control this prophetic ability, and the compulsion to speak an uncomfortable truth is often very hard to resist, though you may attempt to do so by spending Willpower.' },
+	{ name: 'Bound', description: 'You owe some Umbrood, angel, demon, spirit, whatever, and you owe him BIG. This is a Very Bad Thing.' },
+	{ name: 'Cursed', description: 'You have been cursed by someone or something. The curse is specific in nature and cannot be easily dispelled. Level of the flaw reflects how bad the curse is; a 1 point curse is annoying, a 5 point curse is likely life-threatening to you and/or to the people around you, and will at least make you and them incredibly miserable.' },
+	{ name: 'Dark Fate', description: 'You are doomed to suffer a horrible demise, or otherwise have some sort of icky unpleasant fate. You are aware of this, and can kinda make you rather depressed...' },
+	{ name: 'Geas', description: 'Due to an ancient or not-so-ancient pact, or oath made during initiation into something, you have a supernatural taboo placed upon you. If you break it, you may be cursed for life, or lose your powers, or something else bad will happen. A 3-point geas will unlikely affect your everyday life; a 7-point geas is one where risk of breaking must be watched constantly.' },
+	{ name: 'Haunted', description: 'A wraith is plaguing your existence for some reason. Maybe you\'re its murderer, maybe you have something it wants (like a Fetter), or maybe it just doesn\'t like you. Wraiths can do all sorts of weird things to you, move things around, possess you and your friends, inhabit your dreams or your refrigerator, etc...' },
+	{ name: 'Offensive to Animals', description: 'For some reason, animals fear you or just don\'t like you. Add 2 to your difficulty or subract 2 dice from rolls involving interacting with animals. Obviously, Vampires can\'t take this Flaw as they naturally have it (though they can take the 1 point Merit: Inoffensive to Animals, which reverses the effect of the curse).' },
+	{ name: 'Otherworldly Taint', description: 'You have a physical peculiarity (odd hair/eye color, glowing eyes, etc.) and/or just an odd aura about you which may make you stick out. Someone who suspects you\'re not "normal" may make a Perception + Awareness roll, difficulty 7, to determine what you are. Note this isn\'t a Taint of Corruption, just an indication that you are not quite normal.' },
+	{ name: 'Taint of Corruption', description: 'You are touched by the force of Corruption called the Wyrm by the Garou, and can be detected as a Wyrm creature. This makes you Werewolf bait, and particularly sucks if you are a Werewolf. You also suffer nightmares and are called by Wyrm-creatures to join its side. Get your ass cleansed if you can (this is going to take quite a quest) or else... I think there\'s a Vampire version of this which has you as Marked by Cain, and even other vamps will notice it and avoid you or hurt you... and heaven help you if a werewolf sniffs you out. (Of course, all Vamps with a Humanity below 7 read as Tainted by others...).' },
+	
+	// social
+	{ name: 'Airhead' },
+	{ name: 'Craven Image', description: 'There\'s something about you that makes you appear sniveling and "low." In appropriate situations, social difficulties are at +2.' },
+	{ name: 'Disturbing Mannerism' },
+	{ name: 'Enemy', description: 'Somebody\'s out to hurt you or your reputation, or even kill you (or people close to you). A 1-point enemy is less than or comparable to your own ability, a 5-point enemy could easily kick your ass into next Tuesday.' },
+	{ name: 'Isolated Upbringing' },
+	{ name: 'Mistaken Identity' },
+	{ name: 'Mistreated Minority' },
+	
+	// supernatural ties
+	{ name: 'Group Enmity', description: 'Some group amongst your kind, i.e. another clan/tribe/kith/tradition/whatever, doesn\'t like you and may prevent you going places you might otherwise go or may otherwise give you hell in a variety of ways.' },
+	{ name: 'Inconvenient Alliance', description: 'You have an ally with someone who is discomforting to you and/or your circle, but can\'t easily get rid of him because of a favor owed, sense of guilt, or whatever. Level of flaw reflects how controversial or dangerous this ally is.' },
+	{ name: 'Notoriety', description: 'You did something, or at least others think you did, that is frowned upon by your peers and elders. -2 dice to all social rolls dealing with your sept/chantry/etc.' },
+	{ name: 'Probationary Member', description: 'You\'re not on the greatest terms with the group (tradition, clan, tribe, etc.) you belong to and are highly suspect of various naughtiness. You may not be privy to the normal priveleges of being part of your group, nor will you necessarily receive aid when you ought to, etc.' },
+	{ name: 'Outsider', description: 'Though you\'re not exactly infamous, you have a poor reputation amongst your kind. +2 difficulty on all social rolls when interacting with your group (tradition, clan, tribe, etc).' },
+	{ name: 'Rival', description: 'Someone within your own society viciously competes against you and tries to undermine your plans; really obsessive rivals may even want you dead.' },
+	{ name: 'Twisted Upbringing' },
+	
+	// material/mortal ties
+	{ name: 'Persistent Parents' },
+	{ name: 'Ward', description: 'You are devoted to protecting a "sleeping" human, perhaps a close friend or relative from your pre-supernatural days. These mortals have a knack for unknowingly getting in the middle of whatever mess you\'re involved with, or may even help create one.' },
+	
+	// physical
+	{ name: 'Addiction', description: 'You are addicted to some substance, such as caffeine, nicotine, etc. You will start to crave the substance if you don\'t get it often enough, and have to spend Willpower points to avoid giving in to the urge. The larger the flaw, the more dependent you are on the substance, and the worse things will happen if you don\'t get what you need.' },
+	{ name: 'Allergic', description: 'You suffer from an allergy to some substance; a 1 pt. version inconveniences you and may increase difficulties in certain situations, the 3 pt. version means you have an incapacitating or even a potentially fatal reaction to the substance.' },
+	{ name: 'Deep Sleeper', description: 'Waking up is hard; getting you moving is hard enough (+2 difficulty to attempts to wake you), getting you comprehending what\'s going on after you\'re up isn\'t much easier (+1 difficulty to all rolls during the scene). For Vampires, this makes it even harder to stir you during the day, and you may even sleep a good deal past sunset, regardless of Humanity score.' },
+	{ name: 'Deformity', description: 'You have a withered limb, hunchback, or other physical defect which causes you difficulty in movement, as well as in some social interactions. Depending on the type and circumstance, difficulties can be raised on appearance and/or dexterity rolls.' },
+	//{ name: 'Diminished Attributes', description: 'Take back 3 freebies per attribute point you choose not to spend in character creation; for example, if you\'re creating Dippy the Wonder Twerp and only want two points to spend in Mental Attributes instead of three, get 3 freebies.' },
+	{ name: 'Disfigured', description: 'You have an injury or physical defect which makes you perfectly hideous; Appearance trait is automatically 0.' },
+	{ name: 'Lame', description: 'Your legs are somehow permanently injured, and you suffer a -2 dice penalty to movement-related rolls.' },
+	{ name: 'Monstrous', description: 'You look like the very devil, maybe literally. Appearance automatically 0, and some people may take your appearance to believe you\'re connected to some horrible yucky evil thing.' },
+	{ name: 'Mute', description: 'You are physically unable to speak, and must communicate through writing or sign language (or perhaps telepathy, if you are capable of the skill and are in appropriate company).' },
+	{ name: 'One Arm', description: 'Due to an unfortunate injury or birth-defect, you suffer a -2 dice penalty to rolls where an action would usually require two hands.' },
+	{ name: 'Paraplegic', description: 'You cannot move your legs and are confined to movement by wheelchair or similar apparatus.' },
+	{ name: 'Permanent Wound', description: 'For some reason, you have a wound that never heals, which is effectively a permanent lethal health level. If you repair the damage with magic/superscience, the wound re-opens by the next day.' },
+	{ name: 'Short', description: 'You are well below average height, and have difficulty reaching high objects, seeing over things, etc. -2 dice penalty to pursuit rolls. On the up side, you may get bonuses to hiding attempts.' },
+	{ name: 'Sterile', description: 'You are incapable of reproducing. If you are in a society which expects you to have children (such as if you are Kinfolk), this is a flaw. You may, however, take this as a merit if you practice lots of sex magic or something in which being fertile may actually cause more problems for you than not.' },
+	{ name: 'Slow Healing', description: 'For some reason, your healing processes are slow, and you heal twice as slowly as others. Supernatural healing only repairs half the damage it normally would (round down).' },
+	
+	// mage-only
+	{ name: 'Echoes', description: 'Your supernaturalness affects the world around you; for example, if you are a "witch" (Verbena, perhaps), milk sours in your presence or you cannot walk on hallowed ground. Severity of the flaw depends on how severe–and noticeable–the echoes are.' },
+	{ name: 'Phylactery', description: 'Your Avatar is trapped in a place, object, or even living being, or perhaps even a concept, and you must be in contact with this vessel in order to perform magic.' },
+	{ name: 'Shattered Avatar', description: 'Your Avatar is fractured into pieces. The bad part is, you only have a fraction of your "soul," and there may be unfortunate reasons why this is the case. The good part is, if you find the other pieces of your Avatar–perhaps they\'re trapped in a phylactery or in the spirit world–your rating will grow. Unfortunately, the other piece of your Avatar may also be in a person, and you can\'t add to your own rating until that person is dead...' },
+	//{ name: 'Sphere Inept', description: 'You have terrible difficulty comprehending a particular sphere; it costs 25% more than normal (rounded up) to purchase new levels in that sphere. YOU MUST PLAN ON TAKING AND BUYING UP THIS SPHERE if you want this flaw; if you take this flaw and then never put points into the sphere, you\'ve basically given yourself 5 freebie points for nothing, and no Storyteller should allow you that. You may only buy this flaw once.' },
+	{ name: 'Sphere Restriction', description: 'For psychological or spiritual reasons, you cannot use a sphere effect on a particular thing, person, whatever. For example, you may only be able to use the sphere on yourself, but not on other people, or only use it on other people under certain circumstances. Level of flaw depends on restriction; using the previous example: cannot use sphere effect on other people, period: 4 pt. flaw; can use sphere on other people but only with their consent: 3 pt. flaw; can only use sphere on other person with their consent or in self-defense: 2 pt. flaw; can only use sphere on others in self-defense or beneficially, with or without consent (1 pt. flaw).' },
+	{ name: 'Weirdness', description: 'One of your Spheres has an "unsettling effect" attached to it. . . perhaps you broadcast random thoughts (or randomly receive others), or something to that effect.' }
 ];
 
 // make sure any cultures listed here also have lists of possible names (see Character.prototype.NAMES, below)
@@ -277,6 +432,7 @@ function Character($element, options)
 		*/
 		
 		// example character generation:
+		var i; // you can't declare a var inside a for loop; in JS, loops don't create a new scope
 		
 		// some feminist part of me questions the need for a sex attribute :P
 		_this.stats.basics.sex = [ 'male', 'female' ].sample();
@@ -288,6 +444,16 @@ function Character($element, options)
 		_this.stats.basics.age = Math.floor(
 			(function(x) { return Math.pow((x - 50) / 20, 3) + 25; })(Math.random() * 135)
 		);
+		
+		// give 'child' to characters under 16
+		if(_this.stats.basics.age < 16)
+		{
+			_this.stats.flaws.add({ name: 'Child' });
+			
+			// a goodish chance to give 'short' to children
+			if(Math.random() * 10 > _this.stats.basics.age - 10)
+				_this.stats.flaws.add({ name: 'Short' });
+		}
 			
 		// pick a random culture; used, along with sex, for picking a name
 		var culture = _this.CULTURES.sample();
@@ -313,9 +479,49 @@ function Character($element, options)
 			
 			_this.generateMeritsAndFlaws(1, 4);
 		}
+
+		// a goodish chance to add 'aging' to characters 50+ years old
+		if(_this.stats.basics.age >= 50)
+		{
+			for(i = _this.stats.basics.age; i >= 50; i -= 10)
+			{
+				if(Math.random() <= 0.3)
+				{
+					if(_this.decreaseRandomAttributes(['strength','dexterity','stamina'], 1) == 1)
+						_this.stats.flaws.add({ name: 'Aging' });
+					else
+						break;
+				}
+			}
+		}
 		
 	}; // end of generateCharacter method
 
+	/**
+	 * Removes "points" dots randomly from among "possibleAttributes"
+	 * @return the number of points that were successfully removed
+	 */
+	this.decreaseRandomAttributes = function(possibleAttributes, points)
+	{
+		var originalPoints = points;
+		var attribute;
+	
+		while(points > 0 && possibleAttributes.length > 0)
+		{
+			attribute = possibleAttributes.sample();
+			
+			if(_this.stats.attributes[attribute].value > 1)
+			{
+				_this.stats.attributes[attribute].value--;
+				points--;
+			}
+			else
+				possibleAttributes.remove(attribute);
+		}
+		
+		return originalPoints - points;
+	};
+	
 	this.generateMeritsAndFlaws = function(min, max)
 	{
 		var total = Math.floor(Math.random() * (max - min + 1)) + min;
@@ -328,14 +534,22 @@ function Character($element, options)
 				meritOrFlaw = _this.MERITS.sample();
 
 				if(!_this.stats.merits.any(meritOrFlaw))
+				{
 					_this.stats.merits.add(meritOrFlaw);
+					
+					if(meritOrFlaw.hasOwnProperty('onAdd')) meritOrFlaw.onAdd(_this);
+				}
 			}
 			else
 			{
 				meritOrFlaw = _this.FLAWS.sample();
 
 				if(!_this.stats.flaws.any(meritOrFlaw))
+				{
 					_this.stats.flaws.add(meritOrFlaw);
+					
+					if(meritOrFlaw.hasOwnProperty('onAdd')) meritOrFlaw.onAdd(_this);
+				}
 			}
 		}
 	};
@@ -439,7 +653,7 @@ function Character($element, options)
 		}
 	}
 	
-	/*
+	/**
 	 * called by generateCharacter; should only be called once!
 	 */
 	this.generateAttributes = function(primary, secondary, tertiary)
