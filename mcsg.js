@@ -75,7 +75,6 @@ Character.prototype.NAMES = {
 	}
 };
 
-// make sure that any ability listed here also has a list of possible specialties (see Character.prototype.SPECIALTIES, below)
 Character.prototype.ABILITIES = [
 	'alertness', 'athletics', 'awareness', 'brawl', 'dodge',
 	'expression', 'intimidation', 'leadership', 'streetwise', 'subterfuge',
@@ -84,53 +83,22 @@ Character.prototype.ABILITIES = [
 	'melee', 'performance', 'stealth', 'survival', 'technology',
 	
 	'academics', 'computer', 'cosmology', 'enigmas', 'investigation',
-	'law', 'linguistics', 'medicine', 'occult', 'science',
+	'law', 'linguistics', 'medicine', 'occult', 'science', 'lore',
 ];
 
+// any attributes or abilities you want specialties to be picked for, list here
 Character.prototype.SPECIALTIES = {
-	strength: [ 'iron grip' ],
-	stamina: [ 'tireless', 'pain resistant' ],
-	dexterity: [ '???' ],
-	manipulation: [ '???' ],
-	charisma: [ '???' ],
-	appearance: [ 'otherworldly', 'respectable', 'sexy', 'expressive' ],
-	wits: [ 'combat reflexes' ],
-	intelligence: [ 'creative', 'good memory', 'book-smart' ],
-	perception: [ '???' ],
-	
-	alertness: [ 'ambushes', 'concealed weapons', 'followers', 'city', 'forest' ],
-	athletics: [ 'dancing', 'dexterity', 'stamina', 'flexibility', 'throwing', 'soccer', 'baseball', 'football', 'ultimate frisbee' ],
-	awareness: [ 'spirits', 'talismans' ],
-	brawl: [ 'boxing', 'dirty fighting', 'self-defense', 'kicking', 'disarming', 'karate' ],
-	dodge: [ '???' ],
-	expression: [ 'poetry', 'acting' ],
-	intimidation: [ '???' ],
-	leadership: [ '???' ],
-	streetwise: [ 'drugs', 'gangs', 'weapons' ],
-	subterfuge: [ '???' ],
-	
-	crafts: [ 'painting', 'sculpting', 'smithing', 'mechanics', 'carpentry', 'home repair' ],
-	drive: [ 'motorcycle', 'off-road', 'losing tails', 'sudden stops' ],
-	etiquette: [ 'high society', 'mage society', 'street culture' ],
-	firearms: [ 'automatics', 'fast-draw', 'sniping' ],
-	meditation: [ '???' ],
-	melee: [ 'axes', 'disarming', 'improvised weapons', 'knives', 'stakes', 'swords', 'throwing' ],
-	performance: [ 'speech', 'singing', 'motivational', 'breakdancing', 'stand-up comedy', 'acting' ],
-	stealth: [ 'crowds', 'shadowing' ],
-	survival: [ 'forest', 'tundra', 'trapping', 'desert', 'mountaineering', 'medicine', 'urban' ],
-	technology: [ 'engines', 'security', 'technomagic' ],
-	
 	academics: [ 'architecture', 'history', 'literature', 'medieval studies', 'music' ],
-	computer: [ 'data retrieval', 'viruses', 'encryption' ],
 	cosmology: [ 'deep umbra', 'gauntlet', 'nodes', 'realms', 'spirit names' ],
-	enigmas: [ '???' ],
-	investigation: [ 'poison', 'weapons', 'forensics', 'crime scenes' ],
-	law: [ 'corporate', 'crimial', 'police procedure' ],
 	linguistics: [ 'french', 'english', 'spanish', 'german', 'japanese', 'chinese', 'arabic', 'russian' ],
-	medicine: [ 'poisons', 'surgery', 'emergency care', 'pharmaceuticals', 'pathology', 'pediatrics' ],
-	occult: [ 'death mythology', 'creation myths', 'folk tales', 'ghosts', 'infernalism', 'witches', 'new age', 'voudoun' ],
 	science: [ 'chemistry', 'biology', 'astronomy', 'physics', 'metallurgy', 'geology', 'computer science' ],
+	lore: [ 'wendigo' ]
 }
+
+// these abilities will be given specialties if the character has ANY dots in them
+Character.prototype.ABILITIES_REQUIRING_SPECIALTY = [
+	'linguistics', 'lore'
+];
 
 Character.prototype.DEFAULT_OPTIONS = {
 	'class': 'mage',
@@ -357,14 +325,14 @@ function Character($element, options)
 			_this.stats.attributes[attribute].value++;
 			points--;
 			
-			if(_this.stats.attributes[attribute].value == 4)
+			// when we hit 4, assign a specialty (if we have specialties for this attribute)
+			if(_this.stats.attributes[attribute].value == 4 && _this.SPECIALTIES.hasOwnProperty(attribute))
 			{
-				// when we hit 4, assign a specialty
 				_this.stats.attributes[attribute].specialty = _this.SPECIALTIES[attribute].sample();
 			}
+			// when we hit 5, remove the current attribute from the list of attributes we can increase
 			else if(_this.stats.attributes[attribute].value == 5)
 			{
-				// if we hit 5, remove the current attribute from the list of attributes we can increase
 				possibleAttributes.remove(attribute);
 			}
 		}
@@ -431,13 +399,13 @@ function Character($element, options)
 		else if(_this.stats.abilities[ability].value < 0) _this.stats.abilities[ability].value = 0;
 			
 			
-		if(_this.stats.abilities[ability].value >= 4)
+		if(_this.stats.abilities[ability].value >= 4 || _this.ABILITIES_REQUIRING_SPECIALTY.any(ability))
 		{
-			// if the ability's value is 4+, and there's no specialty for it, pick a specialty!
-			if(!_this.stats.abilities[ability].hasOwnProperty('specialty') || _this.stats.abilities[ability].speciality == '')
+			// if the ability's value is 4+, and there are specialties available for this ability, and we haven't picked one already... pick one!
+			if(_this.SPECIALTIES.hasOwnProperty(ability) && (!_this.stats.abilities[ability].hasOwnProperty('specialty') || _this.stats.abilities[ability].speciality == ''))
 				_this.stats.abilities[ability].specialty = _this.SPECIALTIES[ability].sample();
 		}
-		else
+		else if(_this.stats.abilities[ability].value < 4)
 		{
 			// if the ability's value is <4, and there IS a specialty, remove that specialty
 			if(_this.stats.abilities[ability].hasOwnProperty('specialty') && _this.stats.abilities[ability].speciality != '')
