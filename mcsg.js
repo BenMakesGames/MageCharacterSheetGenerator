@@ -4,6 +4,8 @@
 Character.prototype.CHANCE_TO_REPEAT_ABILITIES = 50;
 Character.prototype.CHANCE_TO_REPEAT_SPHERES = 75;
 Character.prototype.CHANCE_TO_REPEAT_BACKGROUNDS = 70;
+Character.prototype.CHANCE_OF_CHILD = 10; // this is in addition to the normal chance it gets picked up from merits & flaws (which is quite small, due to the number of merits and flaws)
+Character.prototype.CHANCE_OF_AGING = 10; // 100 - CHANCE_OF_CHILD - CHANCE_OF_AGING = chance of not forcing an age-related merit/flaw
 Character.prototype.ALLOW_ARCHMAGES = false;
 
 Character.prototype.TRADITIONS = [
@@ -87,10 +89,26 @@ Character.prototype.MERITS = [
 	{ name: 'True Faith' },
 	{ name: 'True Love' },
 	{ name: 'Twin Link', description: 'You share a psychic, if not spiritual, link with one person. As a 4 point merit, you get +2 to Empathy/Awareness rolls when determining how your "twin" feels. As a 6 point merit, you have a bond with the twin that\'s nearly telepathic; you always know what this person is feeling and to a limited extent, thinking. Either member can block this if they wish, though doing so requires some concentration. If you are psychic or Awakened or have an appropriate ability, you can use this ability to sense a state your twin is in (for example, with Mind or Telepathy, you WILL know exactly what the person is thinking, with Life you will know his physical condition, etc.)' },
-	{ name: 'Unaging', description: 'For some reason, you never age. While this has its benefits, if you know people long enough, they\'ll start to notice you not getting any older, which may cause some suspicion. While it\'s unlikely you\'ll die of old age, this merit does not keep you from getting ill or wounded.' },
+	{
+		name: 'Unaging',
+		description: 'For some reason, you never age. While this has its benefits, if you know people long enough, they\'ll start to notice you not getting any older, which may cause some suspicion. While it\'s unlikely you\'ll die of old age, this merit does not keep you from getting ill or wounded.',
+		mayAdd: function(character) { return !character.hasMeritOrFlaw('Aging'); }
+	},
 	{ name: 'Unbondable', description: 'You can\'t be Blood Bound, no matter how much Vampire Blood you drink. For obvious reasons, if you\'re creating a Ghoul character, you have to pay twice the amount for the merit.' },
 	
 	// social
+	{
+		name: 'Child',
+		mayAdd: function(character) {
+			return !character.hasMeritOrFlaw('Aging');
+		},
+		onAdd: function(character) {
+			character.stats.basics.age = Math.floor(Math.random() * 8 + 9);
+			
+			if(Math.random() * 10 > character.stats.basics.age - 10)
+				character.addMerit({ name: 'Short' });
+		}
+	},
 	{ name: 'Good Old Boy/Girl', description: 'You\'re just a nice person, and people recognize and appreciate that. +1 die on social rolls when interacting with your fellow folk.' },
 	{ name: 'Innocent', description: 'You have an aura of childlike innocence (whether you really are or not). -2 difficulty on rolls involving Subterfuge or Manipulation.' },
 	{ name: 'Pitiable', description: 'You have an aura of child-like-ness/innocence about you, and many have the urge to pity and protect you (unless they\'re of a Nature that doesn\'t allow them that sort of thing). This can be helpful, but it may also be annoying.' },
@@ -208,6 +226,28 @@ Character.prototype.FLAWS = [
 	
 	// physical
 	{ name: 'Addiction', description: 'You are addicted to some substance, such as caffeine, nicotine, etc. You will start to crave the substance if you don\'t get it often enough, and have to spend Willpower points to avoid giving in to the urge. The larger the flaw, the more dependent you are on the substance, and the worse things will happen if you don\'t get what you need.' },
+	{
+		name: 'Aging',
+		mayAdd: function(character) {
+			return !character.hasMeritOrFlaw('Unaging') && !character.hasMeritOrFlaw('Child');
+		},
+		onAdd: function(character) {
+			character.stats.basics.age = Math.floor(Math.random() * 10 + 50);
+			character.decreaseRandomAttributes(['strength','dexterity','stamina'], 1);
+			
+			// add up to 40 years, with the potential to reduce a physical stat for each increment of 10
+			for(var i = 0; i < 4; i++)
+			{
+				if(Math.random() < 0.3)
+				{
+					character.stats.basics.age += 10;
+					
+					if(Math.random() < 0.7)
+						character.decreaseRandomAttributes(['strength','dexterity','stamina'], 1);
+				}
+			}
+		}
+	},
 	{ name: 'Allergic', description: 'You suffer from an allergy to some substance; a 1 pt. version inconveniences you and may increase difficulties in certain situations, the 3 pt. version means you have an incapacitating or even a potentially fatal reaction to the substance.' },
 	{ name: 'Deep Sleeper', description: 'Waking up is hard; getting you moving is hard enough (+2 difficulty to attempts to wake you), getting you comprehending what\'s going on after you\'re up isn\'t much easier (+1 difficulty to all rolls during the scene). For Vampires, this makes it even harder to stir you during the day, and you may even sleep a good deal past sunset, regardless of Humanity score.' },
 	{ name: 'Deformity', description: 'You have a withered limb, hunchback, or other physical defect which causes you difficulty in movement, as well as in some social interactions. Depending on the type and circumstance, difficulties can be raised on appearance and/or dexterity rolls.' },
@@ -453,23 +493,7 @@ function Character($element, options)
 		// some feminist part of me questions the need for a sex attribute :P
 		_this.stats.basics.sex = [ 'male', 'female' ].sample();
 			
-		// this probably looks really weird :P I will explain: we're defining a function, and then immediately calling it, passing
-		// a random number. so Math.random() * 135 gets passed in as x, and we're assigning the return value to age.
-		// I got this function by playing around with a graphing calculator. check out its graph to see; the majority of "x" values
-		// land on 25; 0 lands on 9; 135 lands on, like, 102, or something.
-		_this.stats.basics.age = Math.floor(
-			(function(x) { return Math.pow((x - 50) / 20, 3) + 25; })(Math.random() * 135)
-		);
-		
-		// give 'child' to characters under 16
-		if(_this.stats.basics.age < 16)
-		{
-			_this.stats.flaws.add({ name: 'Child' });
-			
-			// a goodish chance to give 'short' to children
-			if(Math.random() * 10 > _this.stats.basics.age - 10)
-				_this.stats.flaws.add({ name: 'Short' });
-		}
+		_this.stats.basics.age = Math.floor(Math.random() * 25 + 16);
 			
 		// pick a random culture; used, along with sex, for picking a name
 		var culture = _this.CULTURES.sample();
@@ -499,21 +523,13 @@ function Character($element, options)
 			_this.generateBackgrounds(7 + Math.floor(Math.random() * 3));
 		}
 
-		// a goodish chance to add 'aging' to characters 50+ years old
-		if(_this.stats.basics.age >= 50)
-		{
-			for(i = _this.stats.basics.age; i >= 50; i -= 10)
-			{
-				if(Math.random() <= 0.3)
-				{
-					if(_this.decreaseRandomAttributes(['strength','dexterity','stamina'], 1) == 1)
-						_this.stats.flaws.add({ name: 'Aging' });
-					else
-						break;
-				}
-			}
-		}
+		var ageModifierRng = Math.random() * 100;
 		
+		if(ageModifierRng < _this.CHANCE_OF_CHILD)
+			_this.addMerit(_this.MERITS.find(function(m) { return m.name == 'Child'; }));
+		else if(ageModifierRng < _this.CHANCE_OF_CHILD + _this.CHANCE_OF_AGING)
+			_this.addMerit(_this.FLAWS.find(function(f) { return f.name == 'Aging'; }));
+
 	}; // end of generateCharacter method
 
 	this.generateBackgrounds = function(points)
@@ -525,8 +541,6 @@ function Character($element, options)
 		
 		var background;
 		var backgroundsLessThan5 = [];
-		
-		console.log(_this.stats.backgrounds);
 		
 		$.each(_this.stats.backgrounds, function(i, background) {
 			if(background.value < 5)
@@ -621,33 +635,46 @@ function Character($element, options)
 	this.generateMeritsAndFlaws = function(min, max)
 	{
 		var total = Math.floor(Math.random() * (max - min + 1)) + min;
-		var i, meritOrFlaw;
+		var i;
 		
 		for(i = 0; i < total; i++)
 		{
 			if(Math.random() < 0.5)
-			{
-				meritOrFlaw = _this.MERITS.sample();
-
-				if(!_this.stats.merits.any(meritOrFlaw))
-				{
-					_this.stats.merits.add(meritOrFlaw);
-					
-					if(meritOrFlaw.hasOwnProperty('onAdd')) meritOrFlaw.onAdd(_this);
-				}
-			}
+				_this.addMerit(_this.MERITS.sample());
 			else
+				_this.addFlaw(_this.FLAWS.sample());
+		}
+	};
+	
+	this.addMerit = function(merit)
+	{
+		if(!_this.stats.merits.any(function(m) { return m.name == merit.name; }))
+		{
+			if(!merit.hasOwnProperty('mayAdd') || merit.mayAdd(_this))
 			{
-				meritOrFlaw = _this.FLAWS.sample();
-
-				if(!_this.stats.flaws.any(meritOrFlaw))
-				{
-					_this.stats.flaws.add(meritOrFlaw);
-					
-					if(meritOrFlaw.hasOwnProperty('onAdd')) meritOrFlaw.onAdd(_this);
-				}
+				_this.stats.merits.add(merit);
+		
+				if(merit.hasOwnProperty('onAdd')) merit.onAdd(_this);
 			}
 		}
+	};
+	
+	this.addFlaw = function(flaw)
+	{
+		if(!_this.stats.flaws.any(function(f) { return f.name == flaw.name; }))
+		{
+			if(!flaw.hasOwnProperty('mayAdd') || flaw.mayAdd(_this))
+			{
+				_this.stats.flaws.add(flaw);
+		
+				if(flaw.hasOwnProperty('onAdd')) flaw.onAdd(_this);
+			}
+		}
+	};
+	
+	this.hasMeritOrFlaw = function(meritOrFlawName)
+	{
+		return _this.stats.merits.any(function(m) { return m.name == meritOrFlawName }) || _this.stats.flaws.any(function(f) { return f.name == meritOrFlawName });
 	};
 	
 	this.generateArete = function()
