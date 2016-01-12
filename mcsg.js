@@ -2,6 +2,8 @@
 
 // .prototype is weird, and even I don't fully understand it. JS is real weird about objects.
 Character.prototype.CHANCE_TO_REPEAT_ABILITIES = 50;
+Character.prototype.CHANCE_TO_REPEAT_SPHERES = 75;
+Character.prototype.ALLOW_ARCHMAGES = false;
 
 Character.prototype.TRADITIONS = [
 	'Akashic Brotherhood',
@@ -13,6 +15,18 @@ Character.prototype.TRADITIONS = [
 	'Son of Ether',
 	'Verbena',
 	'Virtual Adepts',
+];
+
+Character.prototype.SPHERES = [
+	'correspondence',
+	'entropy',
+	'forces',
+	'life',
+	'matter',
+	'mind',
+	'prime',
+	'spirit',
+	'time'
 ];
 
 // from http://www.deathquaker.org/gaming/meritsflaws.html
@@ -287,14 +301,144 @@ function Character($element, options)
 
 			_this.generateAttributes(7, 5, 3);
 			_this.generateAbilities(27);
+			_this.generateArete();
 			
-			// for example's sake, add 1 merit and 1 flaw
-			_this.stats.merits.add(_this.MERITS.sample());
-			_this.stats.flaws.add(_this.FLAWS.sample());
+			if(_this.stats.basics.arete > 3)
+				_this.generateSpheres(7 + Math.floor(Math.random() * 3) + Math.floor(Math.random() * 6));
+			else
+				_this.generateSpheres(6 + Math.floor(Math.random() * 3));
+			
+			_this.stats.basics.willpower = 5;
+			_this.generateWillpower(5, 25); // add up to 5 more points, with a 25% chance for each point
+			
+			_this.generateMeritsAndFlaws(1, 4);
 		}
 		
 	}; // end of generateCharacter method
 
+	this.generateMeritsAndFlaws = function(min, max)
+	{
+		var total = Math.floor(Math.random() * (max - min + 1)) + min;
+		var i, meritOrFlaw;
+		
+		for(i = 0; i < total; i++)
+		{
+			if(Math.random() < 0.5)
+			{
+				meritOrFlaw = _this.MERITS.sample();
+
+				if(!_this.stats.merits.any(meritOrFlaw))
+					_this.stats.merits.add(meritOrFlaw);
+			}
+			else
+			{
+				meritOrFlaw = _this.FLAWS.sample();
+
+				if(!_this.stats.flaws.any(meritOrFlaw))
+					_this.stats.flaws.add(meritOrFlaw);
+			}
+		}
+	};
+	
+	this.generateArete = function()
+	{
+		var r = Math.floor(Math.random() * 100);
+		
+		if(r < 5)
+			_this.stats.basics.arete = 1;
+		else if(r < 20)
+			_this.stats.basics.arete = 2;
+		else if(r >= 95 && _this.ALLOW_ARCHMAGES)
+			_this.stats.basics.arete = 5;
+		else if(r >= 85 && _this.ALLOW_ARCHMAGES)
+			_this.stats.basics.arete = 6;
+		else
+			_this.stats.basics.arete = 3;
+	};
+	
+	this.generateSpheres = function(points)
+	{
+		if(_this.addSphereForFaction())
+			points--;
+		
+		var spheresAvailable = _this.SPHERES.slice(0);
+		var sphere;
+
+		// while we have points to assign, and spheres we can assign to
+		while(points > 0 && spheresAvailable.length > 0)
+		{
+			sphere = spheresAvailable.sample();
+			
+			// if the sphere has no points, OR we pass a CHANCE_TO_REPEAT_SPHERES check, we can put a point into this sphere
+			if(_this.stats.spheres[sphere].value == 0 || Math.random() * 100 < _this.CHANCE_TO_REPEAT_SPHERES)
+			{
+				_this.stats.spheres[sphere].value++;
+				points--;
+				
+				// if we increase a sphere's value to the character's arete, remove the sphere from those available to give points to in the future
+				if(_this.stats.spheres[sphere].value == _this.stats.basics.arete)
+					spheresAvailable.remove(sphere);
+			}
+		}
+	};
+	
+	this.addSphereForFaction = function()
+	{
+		switch(_this.stats.basics.tradition)
+		{
+			case 'Virtual Adepts':
+			case 'Ahl-i-Batin':
+				_this.stats.spheres.correspondence.value++;
+				return true;
+			
+			case 'Euthanatos':
+				_this.stats.spheres.entropy.value++;
+				return true;
+				
+			case 'Order of Hermes':
+			case 'Taftani':
+				_this.stats.spheres.forces.value++;
+				return true;
+			
+			case 'Verbena':
+			case 'Progenitors':
+				_this.stats.spheres.life.value++;
+				return true;
+			
+			case 'Sons of Ether':
+				_this.stats.spheres.matter.value++;
+				return true;
+			
+			case 'Akashic Brotherhood':
+				_this.stats.spheres.mind.value++;
+				return true;
+				
+			case 'Celestial Chorus':
+				_this.stats.spheres.prime.value++;
+				return true;
+			
+			case 'Dreamspeakers':
+				_this.stats.spheres.spirit.value++;
+				return true;
+				
+			case 'Cult of Ecstasy':
+				_this.stats.spheres.time.value++;
+				return true;
+				
+			default:
+				return false;
+		}
+	};
+	
+	this.generateWillpower = function(max, chancePerIncrease)
+	{
+		for(var i = 0; i < max; i++)
+		{
+			if(Math.random() * 100 < chancePerIncrease)
+				_this.stats.basics.willpower++;
+		}
+	}
+	
 	/*
 	 * called by generateCharacter; should only be called once!
 	 */
@@ -462,7 +606,7 @@ function Character($element, options)
 			if(merit.hasOwnProperty('description') && merit.description != '')
 			{
 				var $a = $('<a/>');
-				$a.attr('href', '').attr('data-popover', merit.description).html(merit.name.titleize());
+				$a.attr('href', '').attr('data-popover', 'Merit: ' + merit.description).html(merit.name.titleize());
 				$element.find('[data-property="merits-and-flaws"]').append($('<li/>').append($a));
 			}
 			else
@@ -473,7 +617,7 @@ function Character($element, options)
 			if(flaw.hasOwnProperty('description') && flaw.description != '')
 			{
 				var $a = $('<a/>');
-				$a.attr('href', '').attr('data-popover', flaw.description).html(flaw.name.titleize());
+				$a.attr('href', '').attr('data-popover', 'Flaw: ' + flaw.description).html(flaw.name.titleize());
 				$element.find('[data-property="merits-and-flaws"]').append($('<li/>').append($a));
 			}
 			else
