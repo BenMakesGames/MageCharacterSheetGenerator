@@ -80,7 +80,7 @@ Character.prototype.ABILITIES = [
 	'expression', 'intimidation', 'leadership', 'streetwise', 'subterfuge',
 	
 	'crafts', 'drive', 'etiquette', 'firearms', 'meditation',
-	'melee', 'performance', 'stealth', 'survival', 'technology',
+	'melee', 'performance', 'pilot', 'stealth', 'survival', 'technology',
 	
 	'academics', 'computer', 'cosmology', 'enigmas', 'investigation',
 	'law', 'linguistics', 'medicine', 'occult', 'science', 'lore',
