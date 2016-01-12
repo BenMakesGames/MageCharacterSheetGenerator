@@ -1,45 +1,7 @@
 // consider these "constants" (even though JS has no such thing >_>)
 
-Character.prototype.CULTURES = [ 'american' ];
-
+// .prototype is weird, and even I don't fully understand it. JS is real weird about objects.
 Character.prototype.CHANCE_TO_REPEAT_ABILITIES = 50;
-
-// from http://www.deathquaker.org/gaming/meritsflaws.html
-Character.prototype.MERITS = {
-	// psychological merits
-	code_of_honor: 'You follow a strict personal code, and you either gain 3 extra dice to resist supernatural persuasions that would make you break your code, or the would-be persuader has to roll at a +2 difficulty.',
-	dual_nature: 'You have two purposes in life; you can choose two Natures and regain Willpower when satisfying the requirements for either one (or both of them). These Natures should be complimentary to one another-this is a Merit, not a Derangement.',
-	gall: 'You got moxy, kid. Add an extra die to any Social roll requiring backbone.',
-	loyalty: 'You are devoted to a person, group, or cause, and easily resist attempts to persuade you away from the object of your loyalty. You also gain a Willpower bonus (in the form of bonus dice, or increased difficulty for your opponent) to try and resist supernatural forms of persuasion that challenge your loyalty.',
-};
-
-Character.prototype.FLAWS = {
-	// psychological flaws
-	black_and_white: 'You see all situations in black and white, good and evil, etc. In situations where this limited, judgmental way of thinking may hinder your reaction to something or cause you to act socially inappropriate, add a +1 difficulty to social or whatever rolls.',
-	compulsion: 'You have a specific compulsion which may cause you problems. You have to spend a temporary Willpower point to fight the compulsion for a short time.',
-	compulsive_speech: 'For whatever reason, you have difficulty sticking to the rule, "If you can\'t say anything nice, don\'t say it at all." 1 point makes you talkative and a bit blunt; 2 points makes you a complete prick.',
-	curiosity: 'Your incredible curiosity often overrides your common sense. Resisting temptation requires a successful Wits roll, difficulty depending on the situation. A very bad flaw to take with certain evil sadistic Storytellers. A 3-point version in Bastet makes you obsessed with any mystery you come across, and you\'ll do anything to solve it.',
-	dark_secret: 'There\'s something about you which you don\'t want people to know, and it would be very bad if they did (or at least you think it would be).',
-	deranged: 'You have a permanent, severe mental disorder. You may spend Willpower to fight it at points, but you will never get rid of it. Definitely check with your ST, and possibly your fellow players, before taking this one.',
-	driving_goal: 'You have some goal which is at the basis of all your motivations, though it is of such depth or impossibility, it could probably never be achieved. Your obsession with your vision can temporarily be soothed by spending Willpower.',
-	flashbacks: 'When under pressure and/or in the presence of something which reminds you of something unpleasant in your past, you flashback to that past event. Whilst in a flashback, everything to you is as it was then.',
-	hatred: 'There is something out there which you absolutely loathe, and will do anything to destroy it. You have to succeed a Willpower roll not to go after the object of your hatred, and the appropriate character types will have to make frenzy checks.',
-	hero_worship: 'You absolutely idolize someone, and disobeying them requires an effort of will (spending Willpower or succeeding a Willpower roll at 5+ difficulty). You also are at +2 difficulty to any roll that may force you to admit/realize that your hero may be in the wrong.',
-	inferiority_complex: 'No matter what you do, by your standards, it\'s just not good enough. In situations requiring you to take charge and strut your stuff, add +1 to all difficulties.',
-	intolerance: 'You have difficulty tolerating a specific thing or type of person. +2 difficulty on rolls involving that thing.',
-	lifesaver: 'You revere all life and will not risking killing someone at all costs. Unfortunately, in the World of Darkness, this can sometimes be a problem.',
-	low_self_image: 'Suffering from a low self-esteem, you have -2 dice in situations where you don\'t expect to succeed, or you may have to make Willpower rolls to do something that requires self-confidence.',
-};
-
-Character.prototype.NAMES = {
-	american: {
-		first: {
-			female: [ 'Abby', 'Aileen', 'Claire', 'Erica', 'Jessica', 'Katie', 'Laura', 'Liz', 'Sandy', 'Tess' ],
-			male: [ 'Ben', 'Darren', 'Finn', 'Frank', 'Jake', 'Lyle', 'Stephen', 'Zach' ]
-		},
-		last: [ 'Arze', 'Baker', 'Carpenter', 'Dewhurst', 'Farrow', 'Hendel', 'Lantz', 'MacKay', 'Rogers', 'Smith', 'Stanonik', 'Swanson' ]
-	}
-};
 
 Character.prototype.TRADITIONS = [
 	'Akashic Brotherhood',
@@ -53,6 +15,67 @@ Character.prototype.TRADITIONS = [
 	'Virtual Adepts',
 ];
 
+// from http://www.deathquaker.org/gaming/meritsflaws.html
+// @TODO: finish these lists!
+Character.prototype.MERITS = [
+	// psychological merits
+	{ name: 'Code of Honor', descripiton: 'You follow a strict personal code, and you either gain 3 extra dice to resist supernatural persuasions that would make you break your code, or the would-be persuader has to roll at a +2 difficulty.' },
+	{ name: 'Dual Nature', description: 'You have two purposes in life; you can choose two Natures and regain Willpower when satisfying the requirements for either one (or both of them). These Natures should be complimentary to one another-this is a Merit, not a Derangement.' },
+	{ name: 'Gall', description: 'You got moxy, kid. Add an extra die to any Social roll requiring backbone.' },
+	{ name: 'Loyalty', description: 'You are devoted to a person, group, or cause, and easily resist attempts to persuade you away from the object of your loyalty. You also gain a Willpower bonus (in the form of bonus dice, or increased difficulty for your opponent) to try and resist supernatural forms of persuasion that challenge your loyalty.' },
+	
+	{ name: 'Clear-sighted' },
+	{ name: 'Common sense' },
+	{ name: 'Concentration' },
+	{ name: 'Eidetic Memory' },
+	{ name: 'Iron Will' },
+	{ name: 'Lightning Calculator' },
+	{ name: 'Self-confident', description: 'When you declare that you are spending Willpower for an automatic success on a roll, you do not lose the Willpower unless you fail the roll, due to the strength of your self-confidence. This only comes into effect regarding rolls at difficulty 6 or higher.' },
+	{ name: 'Time Sense' }
+];
+
+Character.prototype.FLAWS = [
+	// psychological flaws
+	{ name: 'Black and White', description: 'You see all situations in black and white, good and evil, etc. In situations where this limited, judgmental way of thinking may hinder your reaction to something or cause you to act socially inappropriate, add a +1 difficulty to social or whatever rolls.' },
+	{ name: 'Compulsion', description: 'You have a specific compulsion which may cause you problems. You have to spend a temporary Willpower point to fight the compulsion for a short time.' },
+	{ name: 'Compulsive Speech', description: 'For whatever reason, you have difficulty sticking to the rule, "If you can\'t say anything nice, don\'t say it at all." 1 point makes you talkative and a bit blunt; 2 points makes you a complete prick.' },
+	{ name: 'Curiosity', description: 'Your incredible curiosity often overrides your common sense. Resisting temptation requires a successful Wits roll, difficulty depending on the situation. A very bad flaw to take with certain evil sadistic Storytellers. A 3-point version in Bastet makes you obsessed with any mystery you come across, and you\'ll do anything to solve it.' },
+	{ name: 'Dark Secret', description: 'There\'s something about you which you don\'t want people to know, and it would be very bad if they did (or at least you think it would be).' },
+	{ name: 'Deranged', description: 'You have a permanent, severe mental disorder. You may spend Willpower to fight it at points, but you will never get rid of it. Definitely check with your ST, and possibly your fellow players, before taking this one.' },
+	{ name: 'Driving Goal', description: 'You have some goal which is at the basis of all your motivations, though it is of such depth or impossibility, it could probably never be achieved. Your obsession with your vision can temporarily be soothed by spending Willpower.' },
+	{ name: 'Flashbacks', description: 'When under pressure and/or in the presence of something which reminds you of something unpleasant in your past, you flashback to that past event. Whilst in a flashback, everything to you is as it was then.' },
+	{ name: 'Hatred', description: 'There is something out there which you absolutely loathe, and will do anything to destroy it. You have to succeed a Willpower roll not to go after the object of your hatred, and the appropriate character types will have to make frenzy checks.' },
+	{ name: 'Hero Worship', description: 'You absolutely idolize someone, and disobeying them requires an effort of will (spending Willpower or succeeding a Willpower roll at 5+ difficulty). You also are at +2 difficulty to any roll that may force you to admit/realize that your hero may be in the wrong.' },
+	{ name: 'Inferiority Complex', description: 'No matter what you do, by your standards, it\'s just not good enough. In situations requiring you to take charge and strut your stuff, add +1 to all difficulties.' },
+	{ name: 'Intolerance', description: 'You have difficulty tolerating a specific thing or type of person. +2 difficulty on rolls involving that thing.' },
+	{ name: 'Lifesaver', description: 'You revere all life and will not risking killing someone at all costs. Unfortunately, in the World of Darkness, this can sometimes be a problem.' },
+	{ name: 'Low Self-image', description: 'Suffering from a low self-esteem, you have -2 dice in situations where you don\'t expect to succeed, or you may have to make Willpower rolls to do something that requires self-confidence.' },
+	{ name: 'Masochist/Sadist' },
+	{ name: 'Nightmares' },
+	{ name: 'Pacifist' },
+	{ name: 'Phobia' },
+	{ name: 'Sensation Junkie' },
+	{ name: 'Shy' },
+	{ name: 'Soft-hearted' },
+	{ name: 'Territorial', description: 'You are extremely attached to your territory: if forced to leave your territory, you will be at +1 difficulty in most rolls because you are so disoriented. If someone passes through your territory without your permission, you will immediately attack him (make a frenzy check). Obviously this was created w/ shifters and vampires in mind, though it might be applicable to other character concepts.' },
+	{ name: 'Ulterior Motive' },
+	{ name: 'Vengeance' },
+];
+
+// make sure any cultures listed here also have lists of possible names (see Character.prototype.NAMES, below)
+Character.prototype.CULTURES = [ 'american' ];
+
+Character.prototype.NAMES = {
+	american: {
+		first: {
+			female: [ 'Abby', 'Aileen', 'Claire', 'Erica', 'Jessica', 'Katie', 'Laura', 'Liz', 'Sandy', 'Tess' ],
+			male: [ 'Ben', 'Darren', 'Finn', 'Frank', 'Jake', 'Lyle', 'Stephen', 'Zach' ]
+		},
+		last: [ 'Arze', 'Baker', 'Carpenter', 'Dewhurst', 'Farrow', 'Hendel', 'Lantz', 'MacKay', 'Rogers', 'Smith', 'Stanonik', 'Swanson' ]
+	}
+};
+
+// make sure that any ability listed here also has a list of possible specialties (see Character.prototype.SPECIALTIES, below)
 Character.prototype.ABILITIES = [
 	'alertness', 'athletics', 'awareness', 'brawl', 'dodge',
 	'expression', 'intimidation', 'leadership', 'streetwise', 'subterfuge',
@@ -178,8 +201,8 @@ function Character($element, options)
 		},
 
 		backgrounds: { }, // ex: { allies: { value: 5, detail: "the vampire king" }, library: { value: 3 } }
-		merits: [], // a list of merit keys, from this.MERITS
-		flaws: [], // a list of merit keys, from this.FLAWS
+		merits: [], // a list of merits, from this.MERITS
+		flaws: [], // a list of flaws, from this.FLAWS
 		
 		// anything else you want to add?
 	};
@@ -275,7 +298,7 @@ function Character($element, options)
 		
 		// some feminist part of me questions the need for a sex attribute :P
 		_this.stats.basics.sex = [ 'male', 'female' ].sample();
-		
+			
 		// this probably looks really weird :P I will explain: we're defining a function, and then immediately calling it, passing
 		// a random number. so Math.random() * 135 gets passed in as x, and we're assigning the return value to age.
 		// I got this function by playing around with a graphing calculator. check out its graph to see; the majority of "x" values
@@ -283,36 +306,38 @@ function Character($element, options)
 		_this.stats.basics.age = Math.floor(
 			(function(x) { return Math.pow((x - 50) / 20, 3) + 25; })(Math.random() * 135)
 		);
-		
+			
 		// pick a random culture; used, along with sex, for picking a name
 		var culture = _this.CULTURES.sample();
 
 		_this.stats.basics.name = _this.NAMES[culture].first[_this.stats.basics.sex].sample() + ' ' + _this.NAMES[culture].last.sample();
 
-		// pick a random tradition
-		_this.stats.basics.tradition = _this.TRADITIONS.sample();
+		if(options.class == 'mage')
+		{
+			// pick a random tradition
+			_this.stats.basics.tradition = _this.TRADITIONS.sample();
 
-		_this.generateAttributes();
-		_this.generateAbilities(27);
+			_this.generateAttributes(7, 5, 3);
+			_this.generateAbilities(27);
+			
+			// for example's sake, add 1 merit and 1 flaw
+			_this.stats.merits.add(_this.MERITS.sample());
+			_this.stats.flaws.add(_this.FLAWS.sample());
+		}
 		
-		
-		// Object.keys(some_var) returns an array of keys which exist for the object "some_var"
-		_this.stats.merits.add(Object.keys(_this.MERITS).sample());
-		_this.stats.flaws.add(Object.keys(_this.FLAWS).sample());
-	
 	}; // end of generateCharacter method
 
 	/*
 	 * called by generateCharacter; should only be called once!
 	 */
-	this.generateAttributes = function()
+	this.generateAttributes = function(primary, secondary, tertiary)
 	{
 		// okay, so sample(3) picks 3 random items from the array... this array has 3 elements... so basically we're picking all 3, but in a random order!
 		var attributePreferences = [['strength', 'stamina', 'dexterity'], ['charisma', 'manipulation', 'appearance'], ['intelligence', 'perception', 'wits']].sample(3);
 		
-		_this.assignAttributePoints(attributePreferences[0], 7);
-		_this.assignAttributePoints(attributePreferences[1], 5);
-		_this.assignAttributePoints(attributePreferences[2], 3);
+		_this.assignAttributePoints(attributePreferences[0], primary);
+		_this.assignAttributePoints(attributePreferences[1], secondary);
+		_this.assignAttributePoints(attributePreferences[2], tertiary);
 	};
 	
 	this.assignAttributePoints = function(possibleAttributes, points)
@@ -466,15 +491,25 @@ function Character($element, options)
 		$element.find('[data-property="merits-and-flaws"]').empty();
 		
 		$.each(_this.stats.merits, function(i, merit) {
-			var $a = $('<a/>');
-			$a.attr('href', '').attr('data-popover', _this.MERITS[merit]).html(merit.titleize());
-			$element.find('[data-property="merits-and-flaws"]').append($('<li/>').append($a));
+			if(merit.hasOwnProperty('description') && merit.description != '')
+			{
+				var $a = $('<a/>');
+				$a.attr('href', '').attr('data-popover', merit.description).html(merit.name.titleize());
+				$element.find('[data-property="merits-and-flaws"]').append($('<li/>').append($a));
+			}
+			else
+				$element.find('[data-property="merits-and-flaws"]').append($('<li/>').append(merit.name.titleize()));
 		});
 		
 		$.each(_this.stats.flaws, function(i, flaw) {
-			var $a = $('<a/>');
-			$a.attr('href', '').attr('data-popover', _this.FLAWS[flaw]).html(flaw.titleize());
-			$element.find('[data-property="merits-and-flaws"]').append($('<li/>').append($a));
+			if(flaw.hasOwnProperty('description') && flaw.description != '')
+			{
+				var $a = $('<a/>');
+				$a.attr('href', '').attr('data-popover', flaw.description).html(flaw.name.titleize());
+				$element.find('[data-property="merits-and-flaws"]').append($('<li/>').append($a));
+			}
+			else
+				$element.find('[data-property="merits-and-flaws"]').append($('<li/>').append(flaw.name.titleize()));
 		});
 	};
 	
