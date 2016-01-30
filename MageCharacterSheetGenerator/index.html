@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
@@ -7,26 +7,36 @@
 		<meta name="author" content="Stephen Dewhurst & Ben Hendel-Doying" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.0/seedrandom.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/sugar/1.4.1/sugar-full.min.js"></script>
-		<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-		<script src="mcsg.js"></script>
+        <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+		<script src="app.js"></script>
 		<link rel="stylesheet" href="html5reset.css" />
 		<link rel="stylesheet" href="responsivegrid.css" />
 		<link rel="stylesheet" href="mcsg.css" />
 		<script>
 			$(function() {
 				var options = {};
+
+				var seedIndex = location.href.indexOf('#seed=');
+				var seed;
 				
+				if(seedIndex >= 0)
+				{
+					seed = location.href.substring(seedIndex + 6);
+					options.rngSeed = seed;
+				}
+			
 				var characterHistory = [];
 				var newButtonRotate = -30;
 			
 				function generateNewCharacter()
 				{
-					var character = new Character($('#character-sheet'), options);
+					var character = new MageCharacterSheet($('#character-sheet'), options);
 				
 					character.render();
 					
-					characterHistory.add({ 'options': options, 'character': character });
+					characterHistory.add({ 'options': character.options, 'character': character });
 					
 					// keep character history limited to 10
 					while(characterHistory.length > 10)
@@ -56,6 +66,7 @@
 				$('#generate-new').click(function(e) {
 					e.preventDefault();
 					
+					delete options.rngSeed;
 					generateNewCharacter();
 				});
 				

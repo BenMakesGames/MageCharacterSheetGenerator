@@ -54,9 +54,9 @@ body > menu ul > li:first-child {
 
 body > menu ul > li > a {
 	display: block;
+	padding: 0.25rem 0.5rem;
 	color: #000;
 	text-decoration: none;
-	padding: 0.25rem 0.5rem;
 	background-color: #ddd;
 }
 
@@ -144,4 +144,3 @@ dl > dd {
 		border: none;
 	}
 }
-
