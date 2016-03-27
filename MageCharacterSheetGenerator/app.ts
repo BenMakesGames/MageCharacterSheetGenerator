@@ -99,7 +99,9 @@
         { name: 'Catlike Balance', description: '-2 difficulty to rolls relating to balance.' },
         { name: 'Double-jointed', description: '-2 difficulty on any roll involving flexibility.' },
         {
-            name: 'Huge Size', description: 'You may be as tall as seven feet and weigh as much as 400lbs. You have an extra Bruised Health Level.', onAdd: function (character) {
+            name: 'Huge Size',
+            description: 'You may be as tall as seven feet and weigh as much as 400lbs. You have an extra Bruised Health Level.',
+            onAdd: function (character) {
                 character.stats.basics.health++;
             }
         },
@@ -270,7 +272,7 @@
         cosmology: ['deep umbra', 'gauntlet', 'nodes', 'realms', 'spirit names'],
         linguistics: ['french', 'english', 'spanish', 'german', 'japanese', 'chinese', 'arabic', 'russian'],
         science: ['chemistry', 'biology', 'astronomy', 'physics', 'metallurgy', 'geology', 'computer science'],
-        lore: ['wendigo']
+        lore: ['wendigo', 'tradition']
     }
 
     static BACKGROUNDS: string[] = [
