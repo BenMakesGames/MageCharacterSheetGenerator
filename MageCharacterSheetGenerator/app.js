@@ -18,6 +18,7 @@ var CharacterSheet = (function () {
                 sex: "",
                 age: 0,
                 name: "",
+                personality: "",
                 nature: "",
                 demeanor: "",
                 essence: "",
@@ -46,7 +47,12 @@ var CharacterSheet = (function () {
         this.stats.basics.age = Math.floor(Math.random() * 25 + 16);
         // pick a random culture; used, along with sex, for picking a name
         var culture = CharacterSheet.CULTURES.sample();
-        this.stats.basics.name = CharacterSheet.NAMES[culture].first[this.stats.basics.sex].sample() + ' ' + CharacterSheet.NAMES[culture].last.sample();
+        this.stats.basics.name = CharacterSheet.NAMES[culture].first[this.stats.basics.sex].sample();
+        this.stats.basics.personality = CharacterSheet.PERSONALITYTRAITS.sample();
+        if (Math.random() * 100 > 20)
+            this.stats.basics.personality += '   ' + CharacterSheet.PERSONALITYTRAITS.sample();
+        if (Math.random() * 100 > 20)
+            this.stats.basics.personality += '   ' + CharacterSheet.PERSONALITYTRAITS.sample();
         var ageModifierRng = Math.random() * 100;
         if (ageModifierRng < this.options.chanceOfChild)
             this.addMerit(CharacterSheet.MERITS.find(function (m) { return m.name == 'Child'; }));
@@ -215,9 +221,11 @@ var CharacterSheet = (function () {
             if (Math.random() * 100 < this.options.chanceToRepeatAbilities && existingAbilitiesLessThan5.length > 0) {
                 // pick a random ability to increase
                 ability = existingAbilitiesLessThan5.sample();
-                // if we picked an ability whose value is 4, pick a new ability (we may pick another ability of value 4, or even the same one, and that's fine)
-                if (this.stats.abilities[ability].value == 4)
-                    ability = existingAbilitiesLessThan5.sample();
+                // if we picked an ability whose value is 3 or more, there's a good chance we abandon it and go find another
+                if (this.stats.abilities[ability].value >= 3 && Math.random() * 100 < 4) {
+                    i--;
+                    continue;
+                }
             }
             else {
                 ability = this.pickNewAbility();
@@ -397,7 +405,7 @@ var CharacterSheet = (function () {
         { name: 'Culture Knack', description: 'You have a knack for fitting in wherever you are, and though you may not know them beforehand, you pick up on customs quickly. In appropriate situations, your social difficulties may be lowered, or you may be able to recover from a botched roll with another roll at normal difficulty.' },
         { name: 'Daredevil', description: 'You love to take risks, and are damn good at living through them. -2 difficulty on dangerous feats, and you can ignore a single 1 on your roll.' },
         { name: 'Graceful', description: 'You are extremely agile and delicate in your movements. -1 difficulty on all Dexterity rolls. Botches will still hurt, but it is possible to gracefully fall down, and you\'ll die before you look clumsy.' },
-        { name: 'Extremely Educated, Skilled, or Talented', description: 'You have a large general amount of knowledge, skill, or talent, and have an automatic 1 in the appropriate ability pools. This is an "illusory" level however–if you want to increase your aptitude in a particular ability, you must buy the first dot as if you didn\'t have it, and then the second.' },
+        //{ name: 'Extremely Educated, Skilled, or Talented', description: 'You have a large general amount of knowledge, skill, or talent, and have an automatic 1 in the appropriate ability pools. This is an "illusory" level however–if you want to increase your aptitude in a particular ability, you must buy the first dot as if you didn\'t have it, and then the second.' },
         { name: 'Natural Linguist', description: 'You\'re good with languages and language structures. 3 dice are added to any language-related roll, but you can\'t know anymore languages than your Linguistic score allows.' },
         { name: 'Well-Traveled', description: 'You are knowledgeable of the ways of the world from your travels and studies. Once per game session, you can gain an automatic success on a non-magical roll to gain a piece of information.' },
         // supernatural
@@ -460,7 +468,9 @@ var CharacterSheet = (function () {
         { name: 'Catlike Balance', description: '-2 difficulty to rolls relating to balance.' },
         { name: 'Double-jointed', description: '-2 difficulty on any roll involving flexibility.' },
         {
-            name: 'Huge Size', description: 'You may be as tall as seven feet and weigh as much as 400lbs. You have an extra Bruised Health Level.', onAdd: function (character) {
+            name: 'Huge Size',
+            description: 'You may be as tall as seven feet and weigh as much as 400lbs. You have an extra Bruised Health Level.',
+            onAdd: function (character) {
                 character.stats.basics.health++;
             }
         },
@@ -515,7 +525,7 @@ var CharacterSheet = (function () {
         { name: 'Illiterate' },
         { name: 'Speech Impediment' },
         // supernatural
-        { name: 'Bard\'s Tongue', description: 'What you say tends to come true; you can\'t control this prophetic ability, and the compulsion to speak an uncomfortable truth is often very hard to resist, though you may attempt to do so by spending Willpower.' },
+        //{ name: 'Bard\'s Tongue', description: 'What you say tends to come true; you can\'t control this prophetic ability, and the compulsion to speak an uncomfortable truth is often very hard to resist, though you may attempt to do so by spending Willpower.' },
         { name: 'Bound', description: 'You owe some Umbrood, angel, demon, spirit, whatever, and you owe him BIG. This is a Very Bad Thing.' },
         { name: 'Cursed', description: 'You have been cursed by someone or something. The curse is specific in nature and cannot be easily dispelled. Level of the flaw reflects how bad the curse is; a 1 point curse is annoying, a 5 point curse is likely life-threatening to you and/or to the people around you, and will at least make you and them incredibly miserable.' },
         { name: 'Dark Fate', description: 'You are doomed to suffer a horrible demise, or otherwise have some sort of icky unpleasant fate. You are aware of this, and can kinda make you rather depressed...' },
@@ -590,12 +600,67 @@ var CharacterSheet = (function () {
     CharacterSheet.NAMES = {
         american: {
             first: {
-                female: ['Abby', 'Aileen', 'Claire', 'Erica', 'Jessica', 'Katie', 'Laura', 'Liz', 'Sandy', 'Tess'],
-                male: ['Ben', 'Darren', 'Finn', 'Frank', 'Jake', 'Lyle', 'Stephen', 'Zach']
+                female: ['Sophia', 'Emma', 'Olivia', 'Ava', 'Isabella', 'Mia', 'Zoe', 'Lily', 'Emily', 'Madelyn', 'Madison', 'Chloe', 'Charlotte', 'Aubrey', 'Avery', 'Abigail', 'Kaylee', 'Layla', 'Harper', 'Ella', 'Amelia', 'Arianna', 'Riley', 'Aria', 'Hailey', 'Hannah', 'Aaliyah', 'Evelyn', 'Addison', 'Mackenzie', 'Adalyn', 'Ellie', 'Brooklyn', 'Nora', 'Scarlett', 'Grace', 'Anna', 'Isabelle', 'Natalie', 'Kaitlyn', 'Lillian', 'Sarah', 'Audrey', 'Elizabeth', 'Leah', 'Annabelle', 'Kylie', 'Mila', 'Claire', 'Victoria', 'Maya', 'Lila', 'Elena', 'Lucy', 'Savannah', 'Gabriella', 'Callie', 'Alaina', 'Sophie', 'Makayla', 'Kennedy', 'Sadie', 'Skyler', 'Allison', 'Caroline', 'Charlie', 'Penelope', 'Alyssa', 'Peyton', 'Samantha', 'Liliana', 'Bailey', 'Maria', 'Reagan', 'Violet', 'Eliana', 'Adeline', 'Eva', 'Stella', 'Keira', 'Katherine', 'Vivian', 'Alice', 'Alexandra', 'Camilla', 'Kayla', 'Alexis', 'Sydney', 'Kaelyn', 'Jasmine', 'Julia', 'Cora', 'Lauren', 'Piper', 'Gianna', 'Paisley', 'Bella', 'London', 'Clara', 'Cadence'],
+                male: ['Jackson', 'Aiden', 'Liam', 'Lucas', 'Noah', 'Mason', 'Ethan', 'Caden', 'Jacob', 'Logan', 'Jayden', 'Elijah', 'Jack', 'Luke', 'Michael', 'Benjamin', 'Alexander', 'James', 'Jayce', 'Caleb', 'Connor', 'William', 'Carter', 'Ryan', 'Oliver', 'Matthew', 'Daniel', 'Gabriel', 'Henry', 'Owen', 'Grayson', 'Dylan', 'Landon', 'Isaac', 'Nicholas', 'Wyatt', 'Nathan', 'Andrew', 'Cameron', 'Dominic', 'Joshua', 'Eli', 'Sebastian', 'Hunter', 'Brayden', 'David', 'Samuel', 'Evan', 'Gavin', 'Christian', 'Max', 'Anthony', 'Joseph', 'Julian', 'John', 'Colton', 'Levi', 'Muhammad', 'Isaiah', 'Aaron', 'Tyler', 'Charlie', 'Adam', 'Parker', 'Austin', 'Thomas', 'Zachary', 'Nolan', 'Alex', 'Ian', 'Jonathan', 'Christopher', 'Cooper', 'Hudson', 'Miles', 'Adrian', 'Leo', 'Blake', 'Lincoln', 'Jordan', 'Tristan', 'Jason', 'Josiah', 'Xavier', 'Camden', 'Chase', 'Declan', 'Carson', 'Colin', 'Brody', 'Asher', 'Jeremiah', 'Micah', 'Easton', 'Xander', 'Ryder', 'Nathaniel', 'Elliot', 'Sean', 'Cole']
             },
             last: ['Arze', 'Baker', 'Carpenter', 'Dewhurst', 'Farrow', 'Hendel', 'Lantz', 'MacKay', 'Rogers', 'Smith', 'Stanonik', 'Swanson']
         }
     };
+    CharacterSheet.PERSONALITYTRAITS = [
+        'Accessible', 'Active', 'Adaptable', 'Admirable', 'Adventurous', 'Agreeable', 'Alert', 'Allocentric', 'Amiable', 'Anticipative',
+        'Appreciative', 'Articulate', 'Aspiring', 'Athletic', 'Attractive', 'Balanced', 'Benevolent', 'Brilliant', 'Calm', 'Capable',
+        'Captivating', 'Caring', 'Challenging', 'Charismatic', 'Charming', 'Cheerful', 'Clean', 'Clear-headed', 'Clever', 'Colorful',
+        'Companionly', 'Compassionate', 'Conciliatory', 'Confident', 'Conscientious', 'Considerate', 'Constant', 'Contemplative', 'Cooperative',
+        'Courageous', 'Courteous', 'Creative', 'Cultured', 'Curious', 'Daring', 'Debonair', 'Decent', 'Decisive', 'Dedicated', 'Deep', 'Dignified',
+        'Directed', 'Disciplined', 'Discreet', 'Dramatic', 'Dutiful', 'Dynamic', 'Earnest', 'Ebullient', 'Educated', 'Efficient', 'Elegant', 'Eloquent',
+        'Empathetic', 'Energetic', 'Enthusiastic', 'Esthetic', 'Exciting', 'Extraordinary', 'Fair', 'Faithful', 'Farsighted', 'Felicific', 'Firm', 'Flexible',
+        'Focused', 'Forecful', 'Forgiving', 'Forthright', 'Freethinking', 'Friendly', 'Fun-loving', 'Gallant', 'Generous', 'Gentle', 'Genuine', 'Good-natured',
+        'Gracious', 'Hardworking', 'Healthy', 'Hearty', 'Helpful', 'Herioc', 'High-minded', 'Honest', 'Honorable', 'Humble', 'Humorous', 'Idealistic', 'Imaginative',
+        'Impressive', 'Incisive', 'Incorruptible', 'Independent', 'Individualistic', 'Innovative', 'Inoffensive', 'Insightful', 'Insouciant', 'Intelligent', 'Intuitive',
+        'Invulnerable', 'Kind', 'Knowledge', 'Leaderly', 'Leisurely', 'Liberal', 'Logical', 'Lovable', 'Loyal', 'Lyrical', 'Magnanimous', 'Many-sided', 'Masculine',
+        'Mature', 'Methodical', 'Maticulous', 'Moderate', 'Modest', 'Multi-leveled', 'Neat', 'Nonauthoritarian', 'Objective', 'Observant', 'Open', 'Optimistic',
+        'Orderly', 'Organized', 'Original', 'Painstaking', 'Passionate', 'Patient', 'Patriotic', 'Peaceful', 'Perceptive', 'Perfectionist', 'Personable',
+        'Persuasive', 'Planful', 'Playful', 'Polished', 'Popular', 'Practical', 'Precise', 'Principled', 'Profound', 'Protean', 'Protective', 'Providential',
+        'Prudent', 'Punctual', 'Pruposeful', 'Rational', 'Realistic', 'Reflective', 'Relaxed', 'Reliable', 'Resourceful', 'Respectful', 'Responsible', 'Responsive',
+        'Reverential', 'Romantic', 'Rustic', 'Sage', 'Sane', 'Scholarly', 'Scrupulous', 'Secure', 'Selfless', 'Self-critical', 'Self-defacing', 'Self-denying',
+        'Self-reliant', 'Self-sufficent', 'Sensitive', 'Sentimental', 'Seraphic', 'Serious', 'Sexy', 'Sharing', 'Shrewd', 'Simple', 'Skillful', 'Sober', 'Sociable',
+        'Solid', 'Sophisticated', 'Spontaneous', 'Sporting', 'Stable', 'Steadfast', 'Steady', 'Stoic', 'Strong', 'Studious', 'Suave', 'Subtle', 'Sweet', 'Sympathetic',
+        'Systematic', 'Tasteful', 'Teacherly', 'Thorough', 'Tidy', 'Tolerant', 'Tractable', 'Trusting', 'Uncomplaining', 'Understanding', 'Undogmatic', 'Unfoolable',
+        'Upright', 'Urbane', 'Venturesome', 'Vivacious', 'Warm', 'Well-bred', 'Well-read', 'Well-rounded', 'Winning', 'Wise', 'Witty', 'Youthful', 'Absentminded',
+        'Aggressive', 'Ambitious', 'Amusing', 'Artful', 'Ascetic', 'Authoritarian', 'Big-thinking', 'Boyish', 'Breezy', 'Businesslike', 'Busy', 'Casual', 'Crebral',
+        'Chummy', 'Circumspect', 'Competitive', 'Complex', 'Confidential', 'Conservative', 'Contradictory', 'Crisp', 'Cute', 'Deceptive', 'Determined', 'Dominating',
+        'Dreamy', 'Driving', 'Droll', 'Dry', 'Earthy', 'Effeminate', 'Emotional', 'Enigmatic', 'Experimental', 'Familial', 'Folksy', 'Formal', 'Freewheeling', 'Frugal',
+        'Glamorous', 'Guileless', 'High-spirited', 'Huried', 'Hypnotic', 'Iconoclastic', 'Idiosyncratic', 'Impassive', 'Impersonal', 'Impressionable', 'Intense',
+        'Invisible', 'Irreligious', 'Irreverent', 'Maternal', 'Mellow', 'Modern', 'Moralistic', 'Mystical', 'Neutral', 'Noncommittal', 'Noncompetitive', 'Obedient',
+        'Old-fashined', 'Ordinary', 'Outspoken', 'Paternalistic', 'Physical', 'Placid', 'Political', 'Predictable', 'Preoccupied', 'Private', 'Progressive', 'Proud',
+        'Pure', 'Questioning', 'Quiet', 'Religious', 'Reserved', 'Restrained', 'Retiring', 'Sarcastic', 'Self-conscious', 'Sensual', 'Skeptical', 'Smooth', 'Soft',
+        'Solemn', 'Solitary', 'Stern', 'Stoiid', 'Strict', 'Stubborn', 'Stylish', 'Subjective', 'Surprising', 'Soft', 'Tough', 'Unaggressive', 'Unambitious', 'Unceremonious',
+        'Unchanging', 'Undemanding', 'Unfathomable', 'Unhurried', 'Uninhibited', 'Unpatriotic', 'Unpredicatable', 'Unreligious', 'Unsentimental', 'Whimsical', 'Abrasive',
+        'Abrupt', 'Agonizing', 'Aimless', 'Airy', 'Aloof', 'Amoral', 'Angry', 'Anxious', 'Apathetic', 'Arbitrary', 'Argumentative', 'Arrogantt', 'Artificial', 'Asocial',
+        'Assertive', 'Astigmatic', 'Barbaric', 'Bewildered', 'Bizarre', 'Bland', 'Blunt', 'Biosterous', 'Brittle', 'Brutal', 'Calculating', 'Callous', 'Cantakerous',
+        'Careless', 'Cautious', 'Charmless', 'Childish', 'Clumsy', 'Coarse', 'Cold', 'Colorless', 'Complacent', 'Complaintive', 'Compulsive', 'Conceited', 'Condemnatory',
+        'Conformist', 'Confused', 'Contemptible', 'Conventional', 'Cowardly', 'Crafty', 'Crass', 'Crazy', 'Criminal', 'Critical', 'Crude', 'Cruel', 'Cynical', 'Decadent',
+        'Deceitful', 'Delicate', 'Demanding', 'Dependent', 'Desperate', 'Destructive', 'Devious', 'Difficult', 'Dirty', 'Disconcerting', 'Discontented', 'Discouraging',
+        'Discourteous', 'Dishonest', 'Disloyal', 'Disobedient', 'Disorderly', 'Disorganized', 'Disputatious', 'Disrespectful', 'Disruptive', 'Dissolute', 'Dissonant',
+        'Distractible', 'Disturbing', 'Dogmatic', 'Domineering', 'Dull', 'Easily Discouraged', 'Egocentric', 'Enervated', 'Envious', 'Erratic', 'Escapist', 'Excitable',
+        'Expedient', 'Extravagant', 'Extreme', 'Faithless', 'False', 'Fanatical', 'Fanciful', 'Fatalistic', 'Fawning', 'Fearful', 'Fickle', 'Fiery', 'Fixed', 'Flamboyant',
+        'Foolish', 'Forgetful', 'Fraudulent', 'Frightening', 'Frivolous', 'Gloomy', 'Graceless', 'Grand', 'Greedy', 'Grim', 'Gullible', 'Hateful', 'Haughty', 'Hedonistic',
+        'Hesitant', 'Hidebound', 'High-handed', 'Hostile', 'Ignorant', 'Imitative', 'Impatient', 'Impractical', 'Imprudent', 'Impulsive', 'Inconsiderate', 'Incurious',
+        'Indecisive', 'Indulgent', 'Inert', 'Inhibited', 'Insecure', 'Insensitive', 'Insincere', 'Insulting', 'Intolerant', 'Irascible', 'Irrational', 'Irresponsible',
+        'Irritable', 'Lazy', 'Libidinous', 'Loquacious', 'Malicious', 'Mannered', 'Mannerless', 'Mawkish', 'Mealymouthed', 'Mechanical', 'Meddlesome', 'Melancholic',
+        'Meretricious', 'Messy', 'Miserable', 'Miserly', 'Misguided', 'Mistaken', 'Money-minded', 'Monstrous', 'Moody', 'Morbid', 'Muddle-headed', 'Naive', 'Narcissistic',
+        'Narrow', 'Narrow-minded', 'Natty', 'Negativistic', 'Neglectful', 'Neurotic', 'Nihilistic', 'Obnoxious', 'Obsessive', 'Obvious', 'Odd', 'Offhand', 'One-dimensional',
+        'One-sided', 'Opinionated', 'Opportunistic', 'Oppressed', 'Outrageous', 'Overimaginative', 'Paranoid', 'Passive', 'Pedantic', 'Perverse', 'Petty', 'Pharissical',
+        'Phlegmatic', 'Plodding', 'Pompous', 'Possessive', 'Power-hungry', 'Predatory', 'Prejudiced', 'Presumptuous', 'Pretentious', 'Prim', 'Procrastinating', 'Profligate',
+        'Provocative', 'Pugnacious', 'Puritanical', 'Quirky', 'Reactionary', 'Reactive', 'Regimental', 'Regretful', 'Repentant', 'Repressed', 'Resentful', 'Ridiculous',
+        'Rigid', 'Ritualistic', 'Rowdy', 'Ruined', 'Sadistic', 'Sanctimonious', 'Scheming', 'Scornful', 'Secretive', 'Sedentary', 'Selfish', 'Self-indulgent', 'Shallow',
+        'Shortsighted', 'Shy', 'Silly', 'Single-minded', 'Sloppy', 'Slow', 'Sly', 'Small-thinking', 'Softheaded', 'Sordid', 'Steely', 'Stiff', 'Strong-willed', 'Stupid',
+        'Submissive', 'Superficial', 'Superstitious', 'Suspicious', 'Tactless', 'Tasteless', 'Tense', 'Thievish', 'Thoughtless', 'Timid', 'Transparent', 'Treacherous',
+        'Trendy', 'Troublesome', 'Unappreciative', 'Uncaring', 'Uncharitable', 'Unconvincing', 'Uncooperative', 'Uncreative', 'Uncritical', 'Unctuous', 'Undisciplined',
+        'Unfriendly', 'Ungrateful', 'Unhealthy', 'Unimaginative', 'Unimpressive', 'Unlovable', 'Unpolished', 'Unprincipled', 'Unrealistic', 'Unreflective', 'Unreliable',
+        'Unrestrained', 'Unself-critical', 'Unstable', 'Vacuous', 'Vague', 'Venal', 'Venomous', 'Vindictive', 'Vulnerable', 'Weak', 'Weak-willed', 'Well-meaning',
+        'Willful', 'Wishful', 'Zany'
+    ];
     CharacterSheet.ABILITIES = [
         'alertness', 'athletics', 'awareness', 'brawl', 'dodge',
         'expression', 'intimidation', 'leadership', 'streetwise', 'subterfuge',
@@ -608,20 +673,31 @@ var CharacterSheet = (function () {
     CharacterSheet.SPECIALTIES = {
         academics: ['architecture', 'history', 'literature', 'medieval studies', 'music'],
         cosmology: ['deep umbra', 'gauntlet', 'nodes', 'realms', 'spirit names'],
-        linguistics: ['french', 'english', 'spanish', 'german', 'japanese', 'chinese', 'arabic', 'russian'],
-        science: ['chemistry', 'biology', 'astronomy', 'physics', 'metallurgy', 'geology', 'computer science'],
-        lore: ['wendigo']
+        linguistics: ['french', 'english', 'spanish', 'german', 'japanese', 'mandarin', 'arabic', 'russian', 'hungarian', 'swahili', 'cantonese', 'thai', 'vietnamese', 'korean'],
+        science: ['chemistry', 'biology', 'astronomy', 'physics', 'metallurgy', 'geology'],
+        lore: ['Tradition Mage', 'Technocrat', 'Vampire', 'Werewolf', 'Changling', 'Wraith', 'Hunter', 'Assamite', 'Brujah', 'Settite', 'Gangrel', 'Giovanni',
+            'Lasombra', 'Malkavian', 'Noferatu', 'Toreador', 'Tremere', 'Tzimisce', 'Ventrue', 'Black Fury', 'Bone Gnawer', 'Children of Gaia', 'Fianna', 'Get of Fenris',
+            'Glass Walkers', 'Red Talons', 'Shadow Lords', 'Silent Striders', 'Silver Fangs', 'Uktena', 'Wendigo', 'Spirit', 'Ajaba', 'Ananasi', 'Bastet', 'Corax', 'Gurahl',
+            'Kitsune', 'Mokole', 'Nagah', 'Nuwisha', 'Ratkin', 'Rokea', 'Boggan', 'Eshu', 'Nocker', 'Pooka', 'Redcap', 'Sidhe', 'Sluagh', 'Troll', 'Ahl-i-Batin', 'Taftani', 'Hollow Ones',
+            'Wu Lung', 'Progenitors', 'Iteration-X', 'New World Order', 'Syndicate', 'Void Engineers', 'Virtual Adepts', 'Euthanatos', 'Order of Hermes', 'Verbena', 'Sons of Ether',
+            'Akashic Brotherhood', 'Celestial Chorus', 'Dreamspeakers', 'Cult of Ecstasy', 'Orphan']
     };
     CharacterSheet.BACKGROUNDS = [
         'Allies', 'Alternate Identity', 'Arcane', 'Artifact', 'Avatar', 'Backup', 'Blessing',
-        'Certification', 'Chantry', 'Cholé', 'Cloaking', 'Companion', 'Construct',
-        'Contacts', 'Cult', 'Demesne', 'Destiny', 'Dream', 'Enhancement', 'Fame',
-        'Familiar', 'Guide', 'Influence', 'Legend', 'Library', 'Mentor', 'Node',
-        'Past Lives', 'Rank', 'Resources', 'Retainers', 'Sanctum', 'Spirit Allies',
-        'Spirit Mentor', 'Talisman', 'Wonder'
+        'Chantry', 'Contacts', 'Cult', 'Dream', 'Fame',
+        'Familiar', 'Influence', 'Library', 'Mentor', 'Node',
+        'Resources', 'Sanctum', 'Spirit Mentor', 'Wonder'
     ];
     // for any backgrounds you want to have a detail associated with, provide a list of possible details here
-    CharacterSheet.BACKGROUND_DETAILS = {};
+    CharacterSheet.BACKGROUND_DETAILS = {
+        'Allies': ['Tradition Mage', 'Technocrat', 'Vampire', 'Werewolf', 'Changling', 'Wraith', 'Hunter', 'Assamite', 'Brujah', 'Settite', 'Gangrel', 'Giovanni',
+            'Lasombra', 'Malkavian', 'Noferatu', 'Toreador', 'Tremere', 'Tzimisce', 'Ventrue', 'Black Fury', 'Bone Gnawer', 'Children of Gaia', 'Fianna', 'Get of Fenris',
+            'Glass Walkers', 'Red Talons', 'Shadow Lords', 'Silent Striders', 'Silver Fangs', 'Uktena', 'Wendigo', 'Spirit', 'Ajaba', 'Ananasi', 'Bastet', 'Corax', 'Gurahl',
+            'Kitsune', 'Mokole', 'Nagah', 'Nuwisha', 'Ratkin', 'Rokea', 'Boggan', 'Eshu', 'Nocker', 'Pooka', 'Redcap', 'Sidhe', 'Sluagh', 'Troll', 'Ahl-i-Batin', 'Taftani', 'Hollow Ones',
+            'Wu Lung', 'Progenitors', 'Iteration-X', 'New World Order', 'Syndicate', 'Void Engineers', 'Virtual Adepts', 'Euthanatos', 'Order of Hermes', 'Verbena', 'Sons of Ether',
+            'Akashic Brotherhood', 'Celestial Chorus', 'Dreamspeakers', 'Cult of Ecstasy', 'Orphan'],
+        'Contacts': ['tradition mages', 'technocracy', 'police', 'community', 'business', 'political'],
+    };
     // these abilities will be given specialties if the character has ANY dots in them
     CharacterSheet.ABILITIES_REQUIRING_SPECIALTY = [
         'linguistics', 'lore'
@@ -634,14 +710,12 @@ var MageCharacterSheet = (function (_super) {
         _super.call(this, $element, options);
         this.generateArete = function () {
             var r = Math.random() * 100;
-            if (r < 5)
-                this.stats.basics.arete = 1;
-            else if (r < 20)
+            if (r < 10)
                 this.stats.basics.arete = 2;
-            else if (r >= 95 && this.options.allowArchmages)
+            else if (r >= 99 && this.options.allowArchmages)
                 this.stats.basics.arete = 5;
-            else if (r >= 85 && this.options.allowArchmages)
-                this.stats.basics.arete = 6;
+            else if (r >= 97 && this.options.allowArchmages)
+                this.stats.basics.arete = 4;
             else
                 this.stats.basics.arete = 3;
         };
@@ -660,7 +734,10 @@ var MageCharacterSheet = (function (_super) {
             spirit: { value: 0, focus: "" },
             time: { value: 0, focus: "" },
         };
-        this.stats.basics.tradition = MageCharacterSheet.TRADITIONS.sample();
+        if (Math.random() * 100 < 3)
+            this.stats.basics.tradition = MageCharacterSheet.RAREFACTIONS.sample();
+        else
+            this.stats.basics.tradition = MageCharacterSheet.TRADITIONS.sample();
         this.generateAttributes(7, 5, 3);
         this.generateAbilities(27);
         this.generateArete();
@@ -679,7 +756,7 @@ var MageCharacterSheet = (function (_super) {
     MageCharacterSheet.prototype.getDefaultOptions = function () {
         return $.extend({}, _super.prototype.getDefaultOptions.call(this), {
             chanceToRepeatSpheres: 75,
-            allowArchmages: false
+            allowArchmages: true
         });
     };
     MageCharacterSheet.prototype.generateSpheres = function (points) {
@@ -749,6 +826,18 @@ var MageCharacterSheet = (function (_super) {
         'Son of Ether',
         'Verbena',
         'Virtual Adepts',
+        'orphan',
+    ];
+    MageCharacterSheet.RAREFACTIONS = [
+        'Ahl-i-batin',
+        'Taftani',
+        'Hollow Ones',
+        'Wu Lung',
+        'Progenitors',
+        'Iteration-X',
+        'New World Order',
+        'Syndicate',
+        'Void Engineers',
     ];
     MageCharacterSheet.SPHERES = [
         'correspondence',
