@@ -671,8 +671,10 @@ var MageCharacterSheet = (function (_super) {
         this.stats.basics.willpower = 5;
         this.generateWillpower(5, 25); // add up to 5 more points, with a 25% chance for each point
         this.generateMeritsAndFlaws(1, 4);
-        this.changeBackground('Avatar', 1); // all mages get Avatar +1
         this.generateBackgrounds(7 + Math.floor(Math.random() * 3));
+        // if the mage has no Avatar, give them a point of Avatar
+        if (this.backgroundValue('Avatar') == 0)
+            this.changeBackground('Avatar', 1);
     }
     MageCharacterSheet.prototype.getDefaultOptions = function () {
         return $.extend({}, _super.prototype.getDefaultOptions.call(this), {
@@ -713,6 +715,7 @@ var MageCharacterSheet = (function (_super) {
                 this.stats.spheres.forces.value++;
                 return true;
             case 'Verbena':
+            case 'what?':
             case 'Progenitors':
                 this.stats.spheres.life.value++;
                 return true;

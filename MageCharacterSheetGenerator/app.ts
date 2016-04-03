@@ -795,8 +795,11 @@ class MageCharacterSheet extends CharacterSheet {
 			
         this.generateMeritsAndFlaws(1, 4);
 
-        this.changeBackground('Avatar', 1); // all mages get Avatar +1
         this.generateBackgrounds(7 + Math.floor(Math.random() * 3));
+
+        // if the mage has no Avatar, give them a point of Avatar
+        if (this.backgroundValue('Avatar') == 0)
+            this.changeBackground('Avatar', 1);
     }
 
     getDefaultOptions() {
@@ -862,6 +865,7 @@ class MageCharacterSheet extends CharacterSheet {
                 return true;
 
             case 'Verbena':
+            case 'what?':
             case 'Progenitors':
                 this.stats.spheres.life.value++;
                 return true;
