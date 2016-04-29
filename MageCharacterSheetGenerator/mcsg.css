@@ -81,7 +81,7 @@ body > footer {
 
 dl > dt {
 	float: left;
-	clear: left;
+	clear: both;
 }
 
 dl > dd {

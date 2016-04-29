@@ -703,7 +703,7 @@ var CharacterSheet = (function () {
         'linguistics', 'lore'
     ];
     return CharacterSheet;
-})();
+}());
 var MageCharacterSheet = (function (_super) {
     __extends(MageCharacterSheet, _super);
     function MageCharacterSheet($element, options) {
@@ -851,5 +851,5 @@ var MageCharacterSheet = (function (_super) {
         'time'
     ];
     return MageCharacterSheet;
-})(CharacterSheet);
+}(CharacterSheet));
 //# sourceMappingURL=app.js.map
