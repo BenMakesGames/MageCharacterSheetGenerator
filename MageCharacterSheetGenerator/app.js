@@ -760,21 +760,33 @@ var MageCharacterSheet = (function (_super) {
         });
     };
     MageCharacterSheet.prototype.generateSpheres = function (points) {
+        var _this = this;
         if (this.addSphereForFaction())
             points--;
+        // spheresAvailable keeps track of which spheres are less than the character's arete
         var spheresAvailable = MageCharacterSheet.SPHERES.slice(0);
         var sphere;
         // while we have points to assign, and spheres we can assign to
         while (points > 0 && spheresAvailable.length > 0) {
-            sphere = spheresAvailable.sample();
-            // if the sphere has no points, OR we pass a CHANCE_TO_REPEAT_SPHERES check, we can put a point into this sphere
-            if (this.stats.spheres[sphere].value == 0 || Math.random() * 100 < this.options.chanceToRepeatSpheres) {
-                this.stats.spheres[sphere].value++;
-                points--;
-                // if we increase a sphere's value to the character's arete, remove the sphere from those available to give points to in the future
-                if (this.stats.spheres[sphere].value == this.stats.basics.arete)
-                    spheresAvailable.remove(sphere);
+            sphere = undefined;
+            if (Math.random() * 100 < this.options.chanceToRepeatSpheres) {
+                // get a list of all spheres the character already has points in
+                sphere = spheresAvailable.filter(function (sphere) {
+                    return _this.stats.spheres[sphere].value > 0;
+                }).sample(); // then pick one
             }
+            // since the previous "if" could fail to pick a sphere, or could simply not be run...
+            if (sphere === undefined) {
+                // get a list of all spheres which the character does not have any points in
+                sphere = spheresAvailable.filter(function (sphere) {
+                    return _this.stats.spheres[sphere].value == 0;
+                }).sample(); // then pick one
+            }
+            this.stats.spheres[sphere].value++;
+            points--;
+            // if we increase a sphere's value to the character's arete, remove the sphere from those available to give points to in the future
+            if (this.stats.spheres[sphere].value == this.stats.basics.arete)
+                spheresAvailable.remove(sphere);
         }
     };
     ;

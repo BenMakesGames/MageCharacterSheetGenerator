@@ -1,4 +1,4 @@
-﻿abstract class CharacterSheet {
+abstract class CharacterSheet {
 
     // from http://www.deathquaker.org/gaming/meritsflaws.html
     // in addition to the "name" and "description" properties, there's also an "onAdd" property, which is a callback function to be called when the merit or flaw
@@ -404,8 +404,8 @@
             abilities: {}, // add these dynamically, in code (see examples below)
 		
             backgrounds: [], // ex: [ { name: 'Allies', value: 5, detail: "the vampire king" }, { name: 'Library', value: 3 } ]
-            merits: [], // a list of merits, from _this.MERITS
-            flaws: [], // a list of flaws, from _this.FLAWS
+            merits: [], // a list of merits, from this.MERITS
+            flaws: [], // a list of flaws, from this.FLAWS
 		
             // anything else you want to add?
         };
@@ -703,13 +703,11 @@
 	 * renders the character in HTML, to the $element provided
 	 */
     render() {
-        var _this = this;
-
-        $.each(this.stats.basics, function (stat, value) {
+        $.each(this.stats.basics, (stat, value) => {
             if (stat == 'arete' || stat == 'willpower' || stat == 'health')
-                _this.$element.find('[data-property="' + stat + '"]').html(_this.renderDots(value, 10));
+                this.$element.find('[data-property="' + stat + '"]').html(this.renderDots(value, 10));
             else
-                _this.$element.find('[data-property="' + stat + '"]').html(value);
+                this.$element.find('[data-property="' + stat + '"]').html(value);
         });
 
         // render attributes, abilities, and spheres
@@ -720,40 +718,38 @@
         // render merits and flaws
         this.$element.find('[data-property="merits-and-flaws"]').empty();
 
-        $.each(this.stats.merits, function (i, merit) {
+        $.each(this.stats.merits, (i, merit) => {
             if (merit.hasOwnProperty('description') && merit.description != '') {
                 var $a = $('<a/>');
                 $a.attr('href', '').attr('data-popover', 'Merit: ' + merit.description).html(merit.name.titleize());
-                _this.$element.find('[data-property="merits-and-flaws"]').append($('<li/>').append($a));
+                this.$element.find('[data-property="merits-and-flaws"]').append($('<li/>').append($a));
             }
             else
-                _this.$element.find('[data-property="merits-and-flaws"]').append($('<li/>').append(merit.name.titleize()));
+                this.$element.find('[data-property="merits-and-flaws"]').append($('<li/>').append(merit.name.titleize()));
         });
 
-        $.each(this.stats.flaws, function (i, flaw) {
+        $.each(this.stats.flaws, (i, flaw) => {
             if (flaw.hasOwnProperty('description') && flaw.description != '') {
                 var $a = $('<a/>');
                 $a.attr('href', '').attr('data-popover', 'Flaw: ' + flaw.description).html(flaw.name.titleize());
-                _this.$element.find('[data-property="merits-and-flaws"]').append($('<li/>').append($a));
+                this.$element.find('[data-property="merits-and-flaws"]').append($('<li/>').append($a));
             }
             else
-                _this.$element.find('[data-property="merits-and-flaws"]').append($('<li/>').append(flaw.name.titleize()));
+                this.$element.find('[data-property="merits-and-flaws"]').append($('<li/>').append(flaw.name.titleize()));
         });
 		
         // render backgrounds
         this.$element.find('[data-property="backgrounds"]').empty();
 
-        $.each(this.stats.backgrounds, function (i, background) {
-            _this.$element.find('[data-property="backgrounds"]').append($('<dt/>').append(background.name));
-            _this.$element.find('[data-property="backgrounds"]').append($('<dd/>').append(_this.renderDots(background.value, 5)));
+        $.each(this.stats.backgrounds, (i, background) => {
+            this.$element.find('[data-property="backgrounds"]').append($('<dt/>').append(background.name));
+            this.$element.find('[data-property="backgrounds"]').append($('<dd/>').append(this.renderDots(background.value, 5)));
         });
 
         location.href = location.protocol + '//' + location.host + location.pathname + '#seed=' + this.options.rngSeed;
     };
 
     renderAbilities() {
-        var _this = this;
-
         var abilityKeys = Object.keys(this.stats.abilities);
         var abilitiesPerColumn = Math.ceil(abilityKeys.length / 3);
 
@@ -764,10 +760,10 @@
         ];
 
         var count = 0;
-        $.each(CharacterSheet.ABILITIES, function (i, stat) {
-            if (_this.stats.abilities.hasOwnProperty(stat)) {
-                var details = _this.stats.abilities[stat];
-                var text = _this.renderDots(details.value, 5);
+        $.each(CharacterSheet.ABILITIES, (i, stat) => {
+            if (this.stats.abilities.hasOwnProperty(stat)) {
+                var details = this.stats.abilities[stat];
+                var text = this.renderDots(details.value, 5);
 
                 if (details.hasOwnProperty('specialty') && details.specialty != '')
                     columns[Math.floor(count / abilitiesPerColumn)] += '<dt>' + stat.titleize() + ' <span class="specialty">(' + details.specialty + ')</span></dt><dd>' + text + '</dd>';
@@ -786,18 +782,17 @@
     }; // renderAbilities
 	
     renderScoresWithDots(scores, detailProperty) {
-        var _this = this;
 
-        $.each(Object.keys(scores), function (i, stat) {
+        $.each(Object.keys(scores), (i, stat) => {
             var details = scores[stat];
-            var text = _this.renderDots(details.value, 5);
+            var text = this.renderDots(details.value, 5);
 
             if (details.hasOwnProperty(detailProperty) && details[detailProperty] != '')
-                _this.$element.find('[data-property="' + stat + '-' + detailProperty + '"]').html('(' + details[detailProperty] + ')');
+                this.$element.find('[data-property="' + stat + '-' + detailProperty + '"]').html('(' + details[detailProperty] + ')');
             else
-                _this.$element.find('[data-property="' + stat + '-' + detailProperty + '"]').empty();
+                this.$element.find('[data-property="' + stat + '-' + detailProperty + '"]').empty();
 
-            _this.$element.find('[data-property="' + stat + '"]').html(text);
+            this.$element.find('[data-property="' + stat + '"]').html(text);
         });
     };
 	
@@ -919,22 +914,39 @@ class MageCharacterSheet extends CharacterSheet {
         if (this.addSphereForFaction())
             points--;
 
+        // spheresAvailable keeps track of which spheres are less than the character's arete
         var spheresAvailable = MageCharacterSheet.SPHERES.slice(0);
         var sphere;
 
         // while we have points to assign, and spheres we can assign to
         while (points > 0 && spheresAvailable.length > 0) {
-            sphere = spheresAvailable.sample();
-			
-            // if the sphere has no points, OR we pass a CHANCE_TO_REPEAT_SPHERES check, we can put a point into this sphere
-            if (this.stats.spheres[sphere].value == 0 || Math.random() * 100 < this.options.chanceToRepeatSpheres) {
-                this.stats.spheres[sphere].value++;
-                points--;
-				
-                // if we increase a sphere's value to the character's arete, remove the sphere from those available to give points to in the future
-                if (this.stats.spheres[sphere].value == this.stats.basics.arete)
-                    spheresAvailable.remove(sphere);
+
+            sphere = undefined;
+
+            if (Math.random() * 100 < this.options.chanceToRepeatSpheres) {
+                // get a list of all spheres the character already has points in
+                sphere = spheresAvailable.filter((sphere) => {
+                    return this.stats.spheres[sphere].value > 0;
+                }).sample(); // then pick one
+
+                // if none were found, .sample() will return undefined, and so no sphere will be picked
             }
+
+            // since the previous "if" could fail to pick a sphere, or could simply not be run...
+            if(sphere === undefined)
+            {
+                // get a list of all spheres which the character does not have any points in
+                sphere = spheresAvailable.filter((sphere) => {
+                    return this.stats.spheres[sphere].value == 0;
+                }).sample(); // then pick one
+            }
+
+            this.stats.spheres[sphere].value++;
+            points--;
+				
+            // if we increase a sphere's value to the character's arete, remove the sphere from those available to give points to in the future
+            if (this.stats.spheres[sphere].value == this.stats.basics.arete)
+                spheresAvailable.remove(sphere);
         }
     };
 
