@@ -23,6 +23,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app.css" />
+    <Content Include="quintcircle.svg" />
     <Content Include="html5reset.css" />
     <TypeScriptCompile Include="lib\jquery.d.ts" />
     <TypeScriptCompile Include="lib\sugar.d.ts" />
