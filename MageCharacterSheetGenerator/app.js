@@ -673,7 +673,11 @@ var CharacterSheet = (function () {
     CharacterSheet.SPECIALTIES = {
         academics: ['architecture', 'history', 'literature', 'medieval studies', 'music'],
         cosmology: ['deep umbra', 'gauntlet', 'nodes', 'realms', 'spirit names'],
-        linguistics: ['french', 'english', 'spanish', 'german', 'japanese', 'mandarin', 'arabic', 'russian', 'hungarian', 'swahili', 'cantonese', 'thai', 'vietnamese', 'korean'],
+        linguistics: [
+            'arabic', 'bengali', 'cantonese', 'english', 'french', 'german', 'hindi', 'hungarian',
+            'japanese', 'korean', 'malay', 'mandarin', 'portuguese', 'russian', 'spanish', 'swahili',
+            'thai', 'turkish', 'vietnamese'
+        ],
         science: ['chemistry', 'biology', 'astronomy', 'physics', 'metallurgy', 'geology'],
         lore: ['Tradition Mage', 'Technocrat', 'Vampire', 'Werewolf', 'Changling', 'Wraith', 'Hunter', 'Assamite', 'Brujah', 'Settite', 'Gangrel', 'Giovanni',
             'Lasombra', 'Malkavian', 'Noferatu', 'Toreador', 'Tremere', 'Tzimisce', 'Ventrue', 'Black Fury', 'Bone Gnawer', 'Children of Gaia', 'Fianna', 'Get of Fenris',

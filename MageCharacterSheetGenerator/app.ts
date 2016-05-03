@@ -326,7 +326,11 @@ abstract class CharacterSheet {
     static SPECIALTIES = {
         academics: ['architecture', 'history', 'literature', 'medieval studies', 'music'],
         cosmology: ['deep umbra', 'gauntlet', 'nodes', 'realms', 'spirit names'],
-        linguistics: ['french', 'english', 'spanish', 'german', 'japanese', 'mandarin', 'arabic', 'russian', 'hungarian', 'swahili', 'cantonese', 'thai', 'vietnamese', 'korean'],
+        linguistics: [ // inspiration: https://en.wikipedia.org/wiki/List_of_languages_by_total_number_of_speakers
+            'arabic', 'bengali', 'cantonese', 'english', 'french', 'german', 'hindi', 'hungarian',
+            'japanese', 'korean', 'malay', 'mandarin', 'portuguese', 'russian', 'spanish', 'swahili',
+            'thai', 'turkish', 'vietnamese'
+        ],
         science: ['chemistry', 'biology', 'astronomy', 'physics', 'metallurgy', 'geology'],
         lore: ['Tradition Mage', 'Technocrat', 'Vampire', 'Werewolf', 'Changling', 'Wraith', 'Hunter', 'Assamite', 'Brujah', 'Settite', 'Gangrel', 'Giovanni',
             'Lasombra', 'Malkavian', 'Noferatu', 'Toreador', 'Tremere', 'Tzimisce', 'Ventrue', 'Black Fury', 'Bone Gnawer', 'Children of Gaia', 'Fianna', 'Get of Fenris',
